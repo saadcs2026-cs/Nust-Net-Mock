@@ -14,10 +14,17 @@
         .login-container { width: 450px; border: 3px double #0055A5; padding: 25px; background: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .login-header { color: #003399; font-size: 18px; font-weight: bold; border-bottom: 2px solid #0055A5; padding-bottom: 8px; margin-bottom: 20px; text-align: center; }
         .nust-logo-sub { text-align: center; font-size: 12px; color: #FF0000; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; position: relative; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; color: #333; margin-bottom: 5px; }
         .form-group input { width: 100%; padding: 8px 10px; border: 1px solid #0055A5; font-size: 14px; outline: none; }
         .form-group input:focus { background: #FAFDFE; border-color: #FF0000; }
+        
+        /* Password wrapper and toggle button */
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        .password-wrapper input { padding-right: 75px; }
+        .toggle-password-btn { position: absolute; right: 5px; background: #E5E7E9; border: 1px solid #7F8C8D; font-size: 11px; font-weight: bold; padding: 4px 6px; cursor: pointer; color: #333; border-radius: 2px; }
+        .toggle-password-btn:hover { background: #BDC3C7; }
+
         .login-btn { width: 100%; padding: 10px; background: linear-gradient(to bottom, #3498DB, #2980B9); color: white; border: 1px solid #2471A3; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
         .login-btn:hover { background: #2980B9; }
         .instructions-box { width: 450px; margin-top: 15px; border: 1px dashed #FF0000; background: #FFF5F5; padding: 12px; font-size: 11px; color: #555; line-height: 1.4; }
@@ -84,11 +91,14 @@
             
             <div class="form-group">
                 <label>Candidate Roll Number / ID</label>
-                <input type="text" id="candidateIdInput" value="NUST-2026-ICS" placeholder="Enter your roll number">
+                <input type="text" id="candidateIdInput" placeholder="e.g., NUST-786-ICS">
             </div>
             <div class="form-group">
                 <label>Access Password</label>
-                <input type="password" id="candidatePassInput" value="12345" placeholder="Enter password">
+                <div class="password-wrapper">
+                    <input type="password" id="candidatePassInput" placeholder="Enter password">
+                    <button type="button" class="toggle-password-btn" id="togglePasswordBtn" onclick="togglePasswordVisibility()">Show</button>
+                </div>
             </div>
             
             <button class="login-btn" onclick="authenticateUserLogin()">Login & Start Assessment</button>
@@ -171,10 +181,38 @@
         let totalSecondsRemaining = 180 * 60; 
         let trackingIntervalEngine = null;
 
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('candidatePassInput');
+            const toggleBtn = document.getElementById('togglePasswordBtn');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                toggleBtn.innerText = "Hide";
+            } else {
+                passInput.type = "password";
+                toggleBtn.innerText = "Show";
+            }
+        }
+
         function authenticateUserLogin() {
             const rawId = document.getElementById('candidateIdInput').value.trim();
-            if(!rawId) { alert("Please input a valid Candidate Roll Number."); return; }
+            const rawPass = document.getElementById('candidatePassInput').value.trim();
             
+            // Define your master security password here
+            const MASTER_PASSWORD = "NUST2026"; 
+            
+            // Require both parameters to exist securely
+            if(!rawId || !rawPass) { 
+                alert("Access Error: Both Candidate Roll Number and Access Password are required to log in."); 
+                return; 
+            }
+            
+            // Compare string parameters to authenticate authorized students
+            if(rawPass !== MASTER_PASSWORD) {
+                alert("Access Denied: Invalid Access Password. You are not authorized to access this exam session.");
+                return;
+            }
+            
+            // Setup dashboard view frames once validated cleanly
             document.getElementById('displayCandidateId').innerText = rawId;
             document.getElementById('loginScreenView').style.display = 'none';
             document.getElementById('examPortalView').style.display = 'block';
@@ -197,7 +235,7 @@
             activeTestSessionPool = [];
             
             if (typeof QUESTION_BANK === 'undefined') {
-                alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please double check your GitHub repository layout.");
+                alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please check your file configurations.");
                 return;
             }
             
@@ -212,7 +250,7 @@
                 }
             });
             
-            // Boot rendering logic chains & initialize timer immediately
+            // Force immediate timer presentation value and instantiate the runtime interval sequence
             updateTimerDisplayElement();
             executeCountdownTimer();
             
@@ -223,7 +261,6 @@
         function executeCountdownTimer() {
             if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
             
-            // Ticks down smoothly step by step every single second
             trackingIntervalEngine = setInterval(() => {
                 if (totalSecondsRemaining <= 0) {
                     clearInterval(trackingIntervalEngine);
@@ -240,7 +277,6 @@
             let minutes = Math.floor((totalSecondsRemaining % 3600) / 60);
             let seconds = totalSecondsRemaining % 60;
 
-            // Formats integers securely with explicit zero paddings to mirror real NUST specs (03:00:00)
             let formattedTimeStr = 
                 String(hours).padStart(2, '0') + ":" + 
                 String(minutes).padStart(2, '0') + ":" + 
