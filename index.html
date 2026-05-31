@@ -6,31 +6,166 @@
     <title>NUST Computer Based Entry Test (CBNET)</title>
     <script src="questions.js"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: #FFFFFF; padding: 15px; user-select: none; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { background-color: #FFFFFF; user-select: none; }
         
-        /* ------------------ LOGIN PAGE STYLING ------------------ */
-        .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; }
-        .login-container { width: 450px; border: 3px double #0055A5; padding: 25px; background: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .login-header { color: #003399; font-size: 18px; font-weight: bold; border-bottom: 2px solid #0055A5; padding-bottom: 8px; margin-bottom: 20px; text-align: center; }
-        .nust-logo-sub { text-align: center; font-size: 12px; color: #FF0000; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }
-        .form-group { margin-bottom: 15px; position: relative; }
-        .form-group label { display: block; font-size: 13px; font-weight: bold; color: #333; margin-bottom: 5px; }
-        .form-group input { width: 100%; padding: 8px 10px; border: 1px solid #0055A5; font-size: 14px; outline: none; }
-        .form-group input:focus { background: #FAFDFE; border-color: #FF0000; }
+        /* ------------------ MODERN GRAPHICAL LOGIN PAGE ------------------ */
+        .login-screen { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #0055A5);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .login-container { 
+            width: 100%;
+            max-width: 460px; 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 35px; 
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .login-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .login-header { 
+            color: #003399; 
+            font-size: 22px; 
+            font-weight: 800; 
+            padding-bottom: 6px; 
+            text-align: center; 
+            letter-spacing: -0.5px;
+        }
+        .nust-logo-sub { 
+            text-align: center; 
+            font-size: 13px; 
+            color: #FF0000; 
+            font-weight: 700; 
+            margin-bottom: 25px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+
+        /* Animated Pulse Badge */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #E8F8F5;
+            color: #117A65;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 20px;
+            width: fit-content;
+            margin: 0 auto 20px auto;
+            border: 1px solid #A3E4D7;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #27AE60;
+            border-radius: 50%;
+            animation: pulse 1.8s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(39, 174, 96, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; color: #444; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;}
         
-        /* Password wrapper and toggle button */
-        .password-wrapper { position: relative; display: flex; align-items: center; }
-        .password-wrapper input { padding-right: 75px; }
-        .toggle-password-btn { position: absolute; right: 5px; background: #E5E7E9; border: 1px solid #7F8C8D; font-size: 11px; font-weight: bold; padding: 4px 6px; cursor: pointer; color: #333; border-radius: 2px; }
+        .form-group input { 
+            width: 100%; 
+            padding: 12px 14px; 
+            border: 2px solid #D5DBDB; 
+            border-radius: 8px;
+            font-size: 15px; 
+            outline: none; 
+            transition: all 0.25s ease;
+            color: #333;
+            background: #FAFAFA;
+        }
+        .form-group input:focus { 
+            background: #FFFFFF; 
+            border-color: #0055A5; 
+            box-shadow: 0 0 0 4px rgba(0, 85, 165, 0.15);
+        }
+        
+        .password-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .password-wrapper input { padding-right: 65px; }
+        
+        .toggle-password-btn { 
+            position: absolute; 
+            right: 10px; 
+            background: #E5E7E9; 
+            border: none; 
+            font-size: 11px; 
+            font-weight: 700; 
+            padding: 5px 9px; 
+            cursor: pointer; 
+            color: #444; 
+            border-radius: 4px;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
         .toggle-password-btn:hover { background: #BDC3C7; }
 
-        .login-btn { width: 100%; padding: 10px; background: linear-gradient(to bottom, #3498DB, #2980B9); color: white; border: 1px solid #2471A3; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
-        .login-btn:hover { background: #2980B9; }
-        .instructions-box { width: 450px; margin-top: 15px; border: 1px dashed #FF0000; background: #FFF5F5; padding: 12px; font-size: 11px; color: #555; line-height: 1.4; }
+        .login-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(135deg, #0055A5, #003399); 
+            color: white; 
+            border: none;
+            border-radius: 8px;
+            font-weight: 700; 
+            font-size: 15px; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 51, 153, 0.3);
+        }
+        .login-btn:hover { 
+            background: linear-gradient(135deg, #003399, #002266);
+            transform: scale(1.01);
+            box-shadow: 0 6px 15px rgba(0, 51, 153, 0.4);
+        }
+        .login-btn:active { transform: scale(0.99); }
 
-        /* ------------------ EXAM INTERFACE STYLING ------------------ */
-        .exam-interface { display: none; }
+        .instructions-box { 
+            width: 100%;
+            max-width: 460px; 
+            margin-top: 20px; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 15px; 
+            font-size: 12px; 
+            color: #E5E7E9; 
+            line-height: 1.5; 
+        }
+
+        /* ------------------ RETRO EXAM INTERFACE STYLING ------------------ */
+        .exam-interface { display: none; padding: 15px; }
         .test-table { width: 100%; border-collapse: collapse; border: 3px double #0055A5; margin-bottom: 10px; }
         .top-header-row { background: #FFFFFF; border-bottom: 2px solid #0055A5; color: #008000; font-weight: bold; padding: 6px 10px; font-size: 14px; text-transform: uppercase; }
         .stream-title { text-align: center; color: #FF0000; font-weight: bold; font-size: 13px; border-bottom: 2px solid #0055A5; padding: 5px; background: #F9F9F9; }
@@ -86,6 +221,10 @@
 
     <div class="login-screen" id="loginScreenView">
         <div class="login-container">
+            <div class="status-badge">
+                <div class="pulse-dot"></div>
+                <span>SYSTEM STATUS: OPERATIONAL</span>
+            </div>
             <div class="login-header">National University of Sciences & Technology</div>
             <div class="nust-logo-sub">Computer Based Entry Test Portal (CBNET)</div>
             
@@ -104,10 +243,10 @@
             <button class="login-btn" onclick="authenticateUserLogin()">Login & Start Assessment</button>
         </div>
         <div class="instructions-box">
-            <b>Important System Instructions:</b><br>
-            1. Total Test duration is exactly 180 minutes.<br>
-            2. The test pattern contains Mathematics (100), Physics (60), and English (40).<br>
-            3. Click the <b>💾 Save</b> button after choosing an option to record your choice and automatically advance.
+            <b style="color: #FFD700; font-size: 13px;">Important System Instructions:</b><br>
+            • Total Test duration is exactly 180 minutes.<br>
+            • The test pattern contains Mathematics (100), Physics (60), and English (40).<br>
+            • Click the <b>💾 Save</b> button after choosing an option to record your choice and automatically advance.
         </div>
     </div>
 
@@ -197,22 +336,19 @@
             const rawId = document.getElementById('candidateIdInput').value.trim();
             const rawPass = document.getElementById('candidatePassInput').value.trim();
             
-            // Define your master security password here
+            // Master security authorization password definition
             const MASTER_PASSWORD = "NUST2026"; 
             
-            // Require both parameters to exist securely
             if(!rawId || !rawPass) { 
                 alert("Access Error: Both Candidate Roll Number and Access Password are required to log in."); 
                 return; 
             }
             
-            // Compare string parameters to authenticate authorized students
             if(rawPass !== MASTER_PASSWORD) {
                 alert("Access Denied: Invalid Access Password. You are not authorized to access this exam session.");
                 return;
             }
             
-            // Setup dashboard view frames once validated cleanly
             document.getElementById('displayCandidateId').innerText = rawId;
             document.getElementById('loginScreenView').style.display = 'none';
             document.getElementById('examPortalView').style.display = 'block';
@@ -250,7 +386,6 @@
                 }
             });
             
-            // Force immediate timer presentation value and instantiate the runtime interval sequence
             updateTimerDisplayElement();
             executeCountdownTimer();
             
