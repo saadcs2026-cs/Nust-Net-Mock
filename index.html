@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3783bac929334b3eac2b0e9e69617817"}'></script><!-- End Cloudflare Web Analytics -->
-<head>
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3783bac929334b3eac2b0e9e69617817"}'></script><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NUST Computer Based Entry Test (CBNET)</title>
@@ -214,8 +213,12 @@
         
         /* Modal Results Layout */
         .modal-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; }
-        .modal-body { background: white; border: 3px double #0055A5; padding: 25px; text-align: center; max-width: 450px; width: 90%; }
+        .modal-body { background: white; border: 3px double #0055A5; padding: 25px; text-align: center; max-width: 650px; width: 95%; max-height: 90vh; overflow-y: auto; }
         .score-output { font-size: 38px; font-weight: bold; color: #008000; margin: 15px 0; font-family: monospace; }
+        
+        /* Review Section Styling */
+        .review-header { background: #003399; color: white; text-align: left; padding: 6px 10px; font-size: 14px; font-weight: bold; margin-top: 15px; text-transform: uppercase;}
+        .review-box { border: 1px solid #BDC3C7; text-align: left; padding: 12px; margin-top: 8px; font-size: 13px; line-height: 1.5; background: #FFF9F9; border-left: 5px solid #FF0000; }
     </style>
 </head>
 <body>
@@ -307,6 +310,9 @@
             <p style="margin-top:8px; font-size:13px; color:#555;">Evaluation finalized successfully. Scoring metric: +1 for correct, 0 for incorrect.</p>
             <div class="score-output" id="totalScoreTarget">0 / 200</div>
             <div id="subjectScoreBreakdownBox" style="text-align:left; background:#F8F9F9; padding:12px; font-size:13px; line-height:1.6; border:1px solid #BDC3C7; margin-bottom:15px;"></div>
+            
+            <div id="wrongQuestionsReviewPanel" style="text-align:left; margin-bottom:20px;"></div>
+            
             <button class="login-btn" style="margin:0 auto; display:block; width:150px;" onclick="window.location.reload()">Restart Portal</button>
         </div>
     </div>
@@ -525,13 +531,45 @@
             if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
             let finalAccumulatedScore = 0;
             let structuredStats = { math: 0, physics: 0, english: 0 };
+            
+            // Temporary objects to sort student errors dynamically
+            let reviewContainerHTML = `<h3 style="color:#FF0000; margin-top:20px; font-size:16px;">Detailed Error Analysis Report</h3>`;
+            let sectionsWithErrors = { math: "", physics: "", english: "" };
 
             activeTestSessionPool.forEach(item => {
-                if(item.chosenIndexValue !== null && item.chosenIndexValue === item.c) {
+                const isCorrectAnswer = item.chosenIndexValue !== null && item.chosenIndexValue === item.c;
+                
+                if(isCorrectAnswer) {
                     finalAccumulatedScore++;
                     structuredStats[item.sectionKeyName]++;
+                } else {
+                    // Generate tracking box for wrong or unattempted item
+                    const chosenText = item.chosenIndexValue !== null ? item.a[item.chosenIndexValue] : "Unattempted";
+                    const correctText = item.a[item.c];
+                    const explanationText = item.e ? item.e : "No reference explanation provided for this conceptual evaluation.";
+                    
+                    sectionsWithErrors[item.sectionKeyName] += `
+                        <div class="review-box">
+                            <p><strong>Question ${item.innerIndexValue}:</strong> ${item.q}</p>
+                            <p style="color:#C0392B; font-weight:600; margin-top:4px;">❌ Your Response: ${chosenText}</p>
+                            <p style="color:#27AE60; font-weight:600;">✅ Correct Selection: ${correctText}</p>
+                            <p style="color:#555; margin-top:6px; font-style:italic; background:#F2F4F4; padding:6px; border-left:3px solid #0055A5;"><strong>Explanation:</strong> ${explanationText}</p>
+                        </div>
+                    `;
                 }
             });
+
+            // Construct sorted list view by subject blocks
+            Object.keys(sectionsWithErrors).forEach(key => {
+                if(sectionsWithErrors[key] !== "") {
+                    let label = key === "math" ? "Mathematics" : key === "physics" ? "Physics" : "English";
+                    reviewContainerHTML += `<div class="review-header">${label} Mistakes</div>` + sectionsWithErrors[key];
+                }
+            });
+
+            if(finalAccumulatedScore === 200) {
+                reviewContainerHTML += `<p style="color:#27AE60; font-weight:bold; margin-top:10px;">Perfect validation run! Zero optimization mistakes detected.</p>`;
+            }
 
             document.getElementById('totalScoreTarget').innerText = `${finalAccumulatedScore} / 200`;
             document.getElementById('subjectScoreBreakdownBox').innerHTML = `
@@ -540,6 +578,8 @@
                 • Physics Score: ${structuredStats.physics} / 60<br>
                 • English Score: ${structuredStats.english} / 40
             `;
+            
+            document.getElementById('wrongQuestionsReviewPanel').innerHTML = reviewContainerHTML;
             document.getElementById('reportCardModalOverlay').style.display = 'flex';
         }
     </script>
