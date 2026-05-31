@@ -3,306 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NUST Computer Based Entry Test (CBNET) Mock</title>
+    <title>NUST Computer Based Entry Test (CBNET)</title>
     <script src="questions.js"></script>
     <style>
-        :root {
-            --nust-blue: #0b3c5d;
-            --nust-gold: #d9b310;
-            --light-bg: #f5f7fa;
-            --border-color: #ccd1d9;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; user-select: none; }
-        body { background-color: var(--light-bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #FFFFFF; padding: 15px; user-select: none; }
         
-        /* Top Banner matching original NUST portal Layout */
-        header { background: var(--nust-blue); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--nust-gold); }
-        header h1 { font-size: 18px; font-weight: bold; }
-        .timer-box { background: #328cc1; padding: 6px 15px; font-weight: bold; border-radius: 4px; font-size: 16px; min-width: 140px; text-align: center; }
+        /* Main Layout Table styling matching original demo */
+        .test-table { width: 100%; border-collapse: collapse; border: 3px double #0055A5; margin-bottom: 10px; }
+        .top-header-row { background: #FFFFFF; border-bottom: 2px solid #0055A5; color: #008000; font-weight: bold; padding: 5px 10px; font-size: 14px; }
+        .stream-title { text-align: center; color: #FF0000; font-weight: bold; font-size: 14px; border-bottom: 2px solid #0055A5; padding: 5px; }
+        
+        /* Question Content Layout Split */
+        .workspace-container { display: flex; border-bottom: 2px solid #0055A5; min-height: 380px; }
+        .left-main-canvas { flex: 1; display: flex; flex-direction: column; border-right: 2px solid #0055A5; }
+        
+        .question-meta-bar { background: #D4E6F1; color: #003399; font-weight: bold; font-size: 13px; padding: 4px 10px; border-bottom: 1px solid #0055A5; display: flex; justify-content: space-between; }
+        .question-body-pane { padding: 15px; font-size: 15px; font-weight: bold; color: #000; min-height: 120px; border-bottom: 2px solid #0055A5; line-height: 1.5; }
+        
+        .options-pane-title { background: #D4E6F1; color: #003399; font-weight: bold; font-size: 13px; padding: 4px 10px; border-bottom: 1px solid #0055A5; }
+        .options-list-wrapper { padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #FAFDFE; flex: 1; }
+        
+        .option-row-item { display: flex; align-items: flex-start; border: 1px solid #0055A5; padding: 8px 12px; background: white; cursor: pointer; border-radius: 2px; }
+        .option-row-item:hover { background: #EBF5FB; }
+        .option-row-item.selected { background: #D4E6F1; border: 1px dashed #003399; font-weight: bold; }
+        .option-radio-input { margin-right: 12px; margin-top: 3px; transform: scale(1.1); }
+        
+        /* Right Side Portrait Panel */
+        .right-photo-panel { width: 160px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: #FFFFFF; }
+        .photo-box-frame { width: 130px; height: 150px; border: 1px solid #003399; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: bold; font-size: 16px; color: #333; background: #FAFAFA; margin-bottom: 15px; }
 
-        /* Main Workbench Wrapper */
-        .main-container { display: flex; flex: 1; overflow: hidden; }
+        /* Retro Navigation Button Grid Block */
+        .navigation-grid-wrapper { border: 1px solid #0055A5; margin: 10px 0; padding: 8px; background: #F2F4F4; display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; }
+        .nav-square-btn { background: #E5E7E9; border: 1px solid #7F8C8D; text-align: center; font-size: 11px; padding: 4px 0; cursor: pointer; font-weight: bold; color: #000; }
+        .nav-square-btn.active-focus { border: 2px solid #FF0000; background: #FFF; }
+        .nav-square-btn.filled { background: #2ECC71; color: white; border-color: #27AE60; }
+        .nav-square-btn.flagged-review { background: #F1C40F; color: black; border-color: #D4AC0D; }
 
-        /* Left Side Panel: Navigation Grid Controls */
-        .sidebar { width: 320px; background: white; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
-        .subject-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: #e6e9ed; padding: 5px; }
-        .tab-btn { background: #328cc1; color: white; border: none; padding: 8px 2px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; text-align: center; }
-        .tab-btn.active { background: var(--nust-blue); border-bottom: 3px solid var(--nust-gold); }
+        /* Bottom Controls Bar Styling matching original icons */
+        .bottom-action-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 5px; background: #FFFFFF; }
+        .timer-dashboard { display: flex; border: 1px solid #008000; background: #FFFFFF; height: 52px; align-items: center; }
+        .timer-left-banner { background: #008000; color: #FFFFFF; font-size: 11px; padding: 5px; height: 100%; display: flex; flex-direction: column; justify-content: center; font-weight: bold; text-align: center; }
+        .timer-countdown-clock { font-size: 26px; font-weight: bold; color: #008000; padding: 0 15px; font-family: monospace; }
         
-        .grid-container { flex: 1; overflow-y: auto; padding: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-content: flex-start; }
-        .q-btn { background: #e6e9ed; border: 1px solid var(--border-color); padding: 8px 0; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; border-radius: 3px; }
-        .q-btn.current { border: 2px solid var(--nust-blue); transform: scale(1.05); }
-        .q-btn.answered { background: #2ecc71; color: white; border-color: #27ae60; }
-        .q-btn.flagged { background: #f39c12; color: white; border-color: #d35400; }
-
-        /* Center Content Area: Question Canvas */
-        .exam-area { flex: 1; display: flex; flex-direction: column; background: white; padding: 30px; overflow-y: auto; }
-        .section-title { font-size: 14px; font-weight: bold; color: var(--nust-blue); border-bottom: 2px solid #e6e9ed; padding-bottom: 8px; margin-bottom: 20px; text-transform: uppercase; }
-        .question-text { font-size: 17px; line-height: 1.6; font-weight: bold; color: #333; margin-bottom: 25px; }
+        .button-bar-right { display: flex; gap: 5px; align-items: center; }
+        .retro-control-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; color: white; border: 1px solid #2471A3; cursor: pointer; border-radius: 3px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); display: flex; align-items: center; gap: 4px; }
+        .btn-system { background: linear-gradient(to bottom, #3498DB, #2980B9); }
+        .btn-system:hover { background: #2980B9; }
+        .btn-navigational { background: linear-gradient(to bottom, #5DADE2, #2874A6); }
+        .btn-navigational:hover { background: #2874A6; }
+        .btn-finish-exam { background: linear-gradient(to bottom, #E74C3C, #C0392B); border-color: #922B21; }
         
-        .options-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
-        .option-card { display: flex; align-items: center; background: var(--light-bg); border: 1px solid var(--border-color); padding: 14px 20px; border-radius: 5px; cursor: pointer; transition: all 0.2s; }
-        .option-card:hover { background: #e6f2ff; border-color: #328cc1; }
-        .option-card.selected { background: #d0e1fd; border-color: var(--nust-blue); font-weight: bold; }
-        .option-radio { margin-right: 15px; transform: scale(1.3); cursor: pointer; }
-        
-        /* Bottom Control Panel Layout */
-        .control-bar { padding: 15px 30px; background: #e6e9ed; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-        .btn { padding: 10px 22px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; min-width: 100px; }
-        .btn-blue { background: var(--nust-blue); color: white; }
-        .btn-gold { background: var(--nust-gold); color: #333; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-grey { background: #95a5a6; color: white; }
-
-        /* Stats Panel */
-        .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px; background: #f8f9fa; border-top: 1px solid var(--border-color); font-size: 12px; }
-        
-        /* Modal Screen overlay */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: white; padding: 40px; border-radius: 8px; text-align: center; max-width: 500px; width: 90%; border-top: 6px solid var(--nust-blue); }
-        .modal h2 { margin-bottom: 15px; color: var(--nust-blue); }
-        .score-display { font-size: 48px; font-weight: bold; color: #2ecc71; margin: 20px 0; }
+        /* Modal Window layout */
+        .modal-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; }
+        .modal-body { background: white; border: 3px double #0055A5; padding: 30px; text-align: center; max-width: 450px; width: 90%; }
+        .score-output { font-size: 36px; font-weight: bold; color: #008000; margin: 15px 0; }
+        .finish-trigger-link { color: #003399; font-weight: bold; text-decoration: underline; cursor: pointer; font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div>
-            <h1>NUST Entry Test Mock System</h1>
-            <div style="font-size: 12px; opacity: 0.9; margin-top: 2px;">Engineering & Computing Stream</div>
-        </div>
-        <div class="timer-box" id="timeDisplay">180:00</div>
-    </header>
-
-    <div class="main-container">
-        <div class="sidebar">
-            <div class="subject-tabs">
-                <button class="tab-btn active" onclick="switchSection('math')">Math<br>(80)</button>
-                <button class="tab-btn" onclick="switchSection('physics')">Physics<br>(60)</button>
-                <button class="tab-btn" onclick="switchSection('chemistry')">Chem<br>(30)</button>
-                <button class="tab-btn" onclick="switchSection('english')">Eng<br>(20)</button>
-                <button class="tab-btn" onclick="switchSection('iq')">IQ<br>(10)</button>
+    <div class="test-table">
+        <div class="top-header-row" id="currentSubjectHeader">Loading Subject Section...</div>
+        <div class="stream-title">Engineering/Computer Science/BS Mathematics (Without Chemistry)</div>
+        
+        <div class="workspace-container">
+            <div class="left-main-canvas">
+                <div class="question-meta-bar">
+                    <span id="questionNumTracker">Question No : 1 of 100</span>
+                    <span>Marks: 1</span>
+                </div>
+                <div class="question-body-pane" id="questionTextBox">System configuration booting...</div>
+                
+                <div class="options-pane-title">Answer ( Please select your correct option )</div>
+                <div class="options-list-wrapper" id="optionsRadioGroup"></div>
             </div>
-            <div class="grid-container" id="navGrid"></div>
             
-            <div class="stats-summary">
-                <div>Answered: <strong id="statAnswered" style="color:#2ecc71">0</strong> / 200</div>
-                <div>Flagged: <strong id="statFlagged" style="color:#f39c12">0</strong></div>
+            <div class="right-photo-panel">
+                <div class="photo-box-frame">Your<br>Image<br>here</div>
+                <div style="font-size:11px; font-weight:bold; color:#0055A5; text-align:center;">
+                    Candidate ID:<br><span style="color:#FF0000">NUST026</span>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="exam-area">
-            <div class="section-title" id="sectionHeader">Mathematics Section</div>
-            <div class="question-text" id="questionBox">Loading test questions pool...</div>
-            <div class="options-container" id="optionsBox"></div>
+    <div class="navigation-grid-wrapper" id="navButtonMatrixGrid"></div>
+
+    <div class="bottom-action-row">
+        <div class="timer-dashboard">
+            <div class="timer-left-banner">Remaining<br>Time</div>
+            <div class="timer-countdown-clock" id="timerClockMinutes">180 min</div>
+        </div>
+
+        <div style="text-align: center;">
+            <span class="finish-trigger-link" onclick="triggerSubmitConfirmation()">Click here to <b>FINISH</b> Your Test</span>
+        </div>
+
+        <div class="button-bar-right">
+            <button class="retro-control-btn btn-system" onclick="saveAnswerState()">💾 Save</button>
+            <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(1)">▶ Next</button>
+            <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(-1)">◀ Prev</button>
+            <button class="retro-control-btn btn-system" style="background: linear-gradient(to bottom, #F39C12, #D35400); border-color:#B03A2E;" onclick="flagQuestionToggle()">📋 Review</button>
+            <button class="retro-control-btn btn-navigational" onclick="switchSubjectCluster('math')">Math Section</button>
+            <button class="retro-control-btn btn-navigational" onclick="switchSubjectCluster('physics')">Phys Section</button>
+            <button class="retro-control-btn btn-navigational" onclick="switchSubjectCluster('english')">Eng Section</button>
         </div>
     </div>
 
-    <div class="control-bar">
-        <div>
-            <button class="btn btn-gold" onclick="toggleFlag()">Flag / Review</button>
-            <button class="btn btn-grey" onclick="clearSelection()" style="margin-left: 8px;">Clear Answer</button>
-        </div>
-        <div>
-            <button class="btn btn-blue" onclick="navigateQuestion(-1)">Previous</button>
-            <button class="btn btn-blue" onclick="navigateQuestion(1)" style="margin-left: 10px;">Next</button>
-            <button class="btn btn-danger" onclick="confirmSubmit()" style="margin-left: 30px;">End Test</button>
-        </div>
-    </div>
-
-    <div class="modal" id="resultModal">
-        <div class="modal-content">
-            <h2>Test Evaluation Finished</h2>
-            <p>You have successfully submitted your NUST Mock Examination.</p>
-            <div class="score-display" id="finalScore">0 / 200</div>
-            <div id="sectionBreakdown" style="text-align: left; margin-bottom: 25px; line-height: 1.6; font-size: 14px; background: #f8f9fa; padding: 15px; border-radius: 5px;"></div>
-            <button class="btn btn-blue" onclick="window.location.reload()">Generate New Mock Test</button>
+    <div class="modal-screen" id="reportCardModalOverlay">
+        <div class="modal-body">
+            <h2 style="color:#0055A5;">NUST Mock Exam Result Summary</h2>
+            <p style="margin-top:10px; font-size:14px; color:#555;">Evaluation processed under authentic NET rules. No negative marking applied.</p>
+            <div class="score-output" id="totalScoreTarget">0 / 200</div>
+            <div id="subjectScoreBreakdownBox" style="text-align:left; background:#F8F9F9; padding:12px; font-size:13px; line-height:1.6; border:1px solid #BDC3C7; margin-bottom:20px;"></div>
+            <button class="retro-control-btn btn-finish-exam" style="margin:0 auto; display:block;" onclick="window.location.reload()">Start New Session</button>
         </div>
     </div>
 
     <script>
-        // Exact NUST NET Question Blueprint structure
-        const BLUEPRINT = { math: 80, physics: 60, chemistry: 30, english: 20, iq: 10 };
-        let finalActiveSessionPool = [];
-        let globalIndex = 0;
-        let timeRemaining = 180 * 60; // Exact 3 Hours countdown
-        let timerInterval;
+        // Exact 3-Subject ICS/Computing Stream Setup
+        const TARGET_BLUEPRINT = { math: 100, physics: 60, english: 40 };
+        let activeTestSessionPool = [];
+        let globalPointerIndex = 0;
+        let countdownTimerSeconds = 180 * 60; // 3 Hours
+        let trackingIntervalEngine;
 
-        // Dynamic Random Fisher-Yates Pooling Array mechanism
-        function gatherRandomSample(sourceArr, sizeNeeded) {
-            let shuffled = [...sourceArr].sort(() => 0.5 - Math.random());
-            // Safe fallback structure if the pool runs shorter than requested size
-            while(shuffled.length < sizeNeeded) {
-                shuffled = shuffled.concat(shuffled);
-            }
-            return shuffled.slice(0, sizeNeeded).map(item => ({
+        function pullRandomPool(source, limit) {
+            let copy = [...source].sort(() => 0.5 - Math.random());
+            while(copy.length < limit) { copy = copy.concat(copy); }
+            return copy.slice(0, limit).map(item => ({
                 ...item,
-                userSelectedOption: null,
-                isFlaggedForReview: false
+                chosenIndexValue: null,
+                isFlagged: false,
+                isSavedPermanently: false
             }));
         }
 
-        function initTestEngine() {
-            // Pool dynamically from definitions defined inside external layout schema 
-            Object.keys(BLUEPRINT).forEach(sec => {
-                const pooledSubset = gatherRandomSample(QUESTION_BANK[sec], BLUEPRINT[sec]);
-                pooledSubset.forEach((q, idx) => {
-                    q.displayIndex = idx + 1;
-                    q.section = sec;
-                });
-                finalActiveSessionPool = finalActiveSessionPool.concat(pooledSubset);
+        function launchTestEngine() {
+            activeTestSessionPool = [];
+            Object.keys(TARGET_BLUEPRINT).forEach(sec => {
+                if (QUESTION_BANK && QUESTION_BANK[sec]) {
+                    const localizedSubSet = pullRandomPool(QUESTION_BANK[sec], TARGET_BLUEPRINT[sec]);
+                    localizedSubSet.forEach((item, index) => {
+                        item.innerIndexValue = index + 1;
+                        item.sectionKeyName = sec;
+                    });
+                    activeTestSessionPool = activeTestSessionPool.concat(localizedSubSet);
+                }
             });
-            
-            startCountdown();
-            renderQuestionView();
-            rebuildNavigationGrid();
+            executeCountdownTimer();
+            refreshWorkspaceUI();
+            generateNavigationMatrix();
         }
 
-        function startCountdown() {
-            timerInterval = setInterval(() => {
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    evaluateExam();
+        function executeCountdownTimer() {
+            clearInterval(trackingIntervalEngine);
+            trackingIntervalEngine = setInterval(() => {
+                if(countdownTimerSeconds <= 0) {
+                    clearInterval(trackingIntervalEngine);
+                    compileExamResults();
                 } else {
-                    timeRemaining--;
-                    let mins = Math.floor(timeRemaining / 60);
-                    let secs = timeRemaining % 60;
-                    document.getElementById('timeDisplay').innerText = 
-                        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                    countdownTimerSeconds--;
+                    let minsLeft = Math.ceil(countdownTimerSeconds / 60);
+                    document.getElementById('timerClockMinutes').innerText = `${minsLeft} min`;
                 }
             }, 1000);
         }
 
-        function renderQuestionView() {
-            const currentQ = finalActiveSessionPool[globalIndex];
+        function refreshWorkspaceUI() {
+            const currentQuestionObj = activeTestSessionPool[globalPointerIndex];
             
-            document.getElementById('sectionHeader').innerText = `${currentQ.section} Section — Question ${currentQ.displayIndex} of ${BLUEPRINT[currentQ.section]}`;
-            document.getElementById('questionBox').innerText = currentQ.q;
+            // Format top bars exactly like official image specs
+            let subjectCleanText = currentQuestionObj.sectionKeyName.toUpperCase();
+            if(subjectCleanText === "MATH") subjectCleanText = "Mathematics";
             
-            const optionsBox = document.getElementById('optionsBox');
-            optionsBox.innerHTML = '';
+            document.getElementById('currentSubjectHeader').innerText = subjectCleanText;
+            document.getElementById('questionNumTracker').innerText = `Question No : ${currentQuestionObj.innerIndexValue} of ${TARGET_BLUEPRINT[currentQuestionObj.sectionKeyName]}`;
+            document.getElementById('questionTextBox').innerText = currentQuestionObj.q;
             
-            currentQ.a.forEach((opt, idx) => {
-                const card = document.createElement('div');
-                card.className = `option-card ${currentQ.userSelectedOption === idx ? 'selected' : ''}`;
-                card.onclick = () => selectOption(idx);
+            const radioContainer = document.getElementById('optionsRadioGroup');
+            radioContainer.innerHTML = '';
+            
+            currentQuestionObj.a.forEach((opt, idx) => {
+                const optRow = document.createElement('div');
+                optRow.className = `option-row-item ${currentQuestionObj.chosenIndexValue === idx ? 'selected' : ''}`;
+                optRow.onclick = () => {
+                    currentQuestionObj.chosenIndexValue = idx;
+                    refreshWorkspaceUI();
+                };
                 
-                card.innerHTML = `
-                    <input type="radio" class="option-radio" name="mcq_opt" ${currentQ.userSelectedOption === idx ? 'checked' : ''}>
+                optRow.innerHTML = `
+                    <input type="radio" class="option-radio-input" name="nust_radio" ${currentQuestionObj.chosenIndexValue === idx ? 'checked' : ''}>
                     <span>${opt}</span>
                 `;
-                optionsBox.appendChild(card);
+                radioContainer.appendChild(optRow);
             });
 
-            // Set dynamic highlighted indicators in left container grid view
-            document.querySelectorAll('.q-btn').forEach((btn, i) => {
-                btn.classList.toggle('current', i === globalIndex);
+            // Adjust targeted square grid background highlight boundaries
+            document.querySelectorAll('.nav-square-btn').forEach((btn, index) => {
+                btn.classList.toggle('active-focus', index === globalPointerIndex);
             });
-            updateMetricsCounters();
         }
 
-        function rebuildNavigationGrid() {
-            const grid = document.getElementById('navGrid');
-            grid.innerHTML = '';
-            const activeSection = finalActiveSessionPool[globalIndex].section;
+        function generateNavigationMatrix() {
+            const gridContainer = document.getElementById('navButtonMatrixGrid');
+            gridContainer.innerHTML = '';
+            const activeSectionFilter = activeTestSessionPool[globalPointerIndex].sectionKeyName;
 
-            finalActiveSessionPool.forEach((q, index) => {
-                if(q.section !== activeSection) return; // Display exclusively current active module blocks
+            activeTestSessionPool.forEach((item, idx) => {
+                if(item.sectionKeyName !== activeSectionFilter) return;
                 
-                const btn = document.createElement('button');
-                btn.className = 'q-btn';
-                btn.innerText = q.displayIndex;
+                const square = document.createElement('div');
+                square.className = 'nav-square-btn';
+                square.innerText = item.innerIndexValue;
                 
-                if (q.userSelectedOption !== null) btn.classList.add('answered');
-                if (q.isFlaggedForReview) btn.classList.add('flagged');
-                if (index === globalIndex) btn.classList.add('current');
+                if(item.isSavedPermanently) square.classList.add('filled');
+                if(item.isFlagged) square.classList.add('flagged-review');
+                if(idx === globalPointerIndex) square.classList.add('active-focus');
                 
-                btn.onclick = () => { globalIndex = index; renderQuestionView(); };
-                grid.appendChild(btn);
+                square.onclick = () => {
+                    globalPointerIndex = idx;
+                    refreshWorkspaceUI();
+                    generateNavigationMatrix();
+                };
+                gridContainer.appendChild(square);
             });
-            
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${activeSection}'`));
-            });
         }
 
-        function switchSection(sectionKey) {
-            globalIndex = finalActiveSessionPool.findIndex(q => q.section === sectionKey);
-            renderQuestionView();
-            rebuildNavigationGrid();
+        function saveAnswerState() {
+            const currentItem = activeTestSessionPool[globalPointerIndex];
+            if(currentItem.chosenIndexValue !== null) {
+                currentItem.isSavedPermanently = true;
+            }
+            generateNavigationMatrix();
+            shiftActiveIndex(1); // Auto advance step just like original portal setup
         }
 
-        function selectOption(index) {
-            finalActiveSessionPool[globalIndex].userSelectedOption = index;
-            renderQuestionView();
-            rebuildNavigationGrid();
+        function flagQuestionToggle() {
+            activeTestSessionPool[globalPointerIndex].isFlagged = !activeTestSessionPool[globalPointerIndex].isFlagged;
+            generateNavigationMatrix();
         }
 
-        function clearSelection() {
-            finalActiveSessionPool[globalIndex].userSelectedOption = null;
-            renderQuestionView();
-            rebuildNavigationGrid();
-        }
-
-        function toggleFlag() {
-            finalActiveSessionPool[globalIndex].isFlaggedForReview = !finalActiveSessionPool[globalIndex].isFlaggedForReview;
-            renderQuestionView();
-            rebuildNavigationGrid();
-        }
-
-        function navigateQuestion(step) {
-            let nextIdx = globalIndex + step;
-            if (nextIdx >= 0 && nextIdx < finalActiveSessionPool.length) {
-                const currentSec = finalActiveSessionPool[globalIndex].section;
-                globalIndex = nextIdx;
-                if(finalActiveSessionPool[globalIndex].section !== currentSec) {
-                    rebuildNavigationGrid();
+        function shiftActiveIndex(step) {
+            let calculatedTargetIdx = globalPointerIndex + step;
+            if(calculatedTargetIdx >= 0 && calculatedTargetIdx < activeTestSessionPool.length) {
+                const originalSectionName = activeTestSessionPool[globalPointerIndex].sectionKeyName;
+                globalPointerIndex = calculatedTargetIdx;
+                if(activeTestSessionPool[globalPointerIndex].sectionKeyName !== originalSectionName) {
+                    generateNavigationMatrix();
                 } else {
-                    renderQuestionView();
+                    refreshWorkspaceUI();
                 }
             }
         }
 
-        function updateMetricsCounters() {
-            let ans = finalActiveSessionPool.filter(q => q.userSelectedOption !== null).length;
-            let flg = finalActiveSessionPool.filter(q => q.isFlaggedForReview).length;
-            document.getElementById('statAnswered').innerText = ans;
-            document.getElementById('statFlagged').innerText = flg;
+        function switchSubjectCluster(sectionKey) {
+            globalPointerIndex = activeTestSessionPool.findIndex(item => item.sectionKeyName === sectionKey);
+            refreshWorkspaceUI();
+            generateNavigationMatrix();
         }
 
-        function confirmSubmit() {
-            if(confirm("Are you absolutely sure you want to end your exam and calculate scores? This cannot be undone.")) {
-                evaluateExam();
+        function triggerSubmitConfirmation() {
+            if(confirm("Do you want to finalise and finish your assessment examination submission?")) {
+                compileExamResults();
             }
         }
 
-        function evaluateExam() {
-            clearInterval(timerInterval);
-            let absoluteScore = 0;
-            let breakdownStats = { math: 0, physics: 0, chemistry: 0, english: 0, iq: 0 };
+        function compileExamResults() {
+            clearInterval(trackingIntervalEngine);
+            let finalAccumulatedScore = 0;
+            let structuredStats = { math: 0, physics: 0, english: 0 };
 
-            finalActiveSessionPool.forEach(q => {
-                if(q.userSelectedOption === q.c) {
-                    absoluteScore++;
-                    breakdownStats[q.section]++;
+            activeTestSessionPool.forEach(item => {
+                // Award points only for direct match against correct baseline criteria matrix
+                if(item.chosenIndexValue !== null && item.chosenIndexValue === item.c) {
+                    finalAccumulatedScore++;
+                    structuredStats[item.sectionKeyName]++;
                 }
             });
 
-            document.getElementById('finalScore').innerText = `${absoluteScore} / 200`;
-            
-            document.getElementById('sectionBreakdown').innerHTML = `
-                <strong>Subject Wise Score Distribution Breakdown:</strong><br>
-                • Mathematics Score: ${breakdownStats.math} / 80<br>
-                • Physics Score: ${breakdownStats.physics} / 60<br>
-                • Chemistry Score: ${breakdownStats.chemistry} / 30<br>
-                • English Score: ${breakdownStats.english} / 20<br>
-                • Intelligence (IQ) Score: ${breakdownStats.iq} / 10
+            document.getElementById('totalScoreTarget').innerText = `${finalAccumulatedScore} / 200`;
+            document.getElementById('subjectScoreBreakdownBox').innerHTML = `
+                <strong>Verified Subject Breakdown (Positive Only Scoring):</strong><br>
+                • Mathematics Score: ${structuredStats.math} / 100<br>
+                • Physics Score: ${structuredStats.physics} / 60<br>
+                • English Score: ${structuredStats.english} / 40
             `;
-            document.getElementById('resultModal').style.display = 'flex';
+            document.getElementById('reportCardModalOverlay').style.display = 'flex';
         }
 
-        // Initialize Engine Core runtime once structure finishes booting
-        window.onload = initTestEngine;
+        window.onload = launchTestEngine;
     </script>
 </body>
 </html>
