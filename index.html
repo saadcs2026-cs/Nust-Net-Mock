@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3783bac929334b3eac2b0e9e69617817"}'></script><head>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "3783bac929334b3eac2b0e9e69617817"}'></script><!-- End Cloudflare Web Analytics -->
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NUST Computer Based Entry Test (CBNET)</title>
@@ -100,7 +101,7 @@
             border-radius: 8px;
             font-size: 15px; 
             outline: none; 
-            transition: all 0.25s ease;
+            transition: all 0.2s ease;
             color: #333;
             background: #FAFAFA;
         }
@@ -219,6 +220,7 @@
         /* Review Section Styling */
         .review-header { background: #003399; color: white; text-align: left; padding: 6px 10px; font-size: 14px; font-weight: bold; margin-top: 15px; text-transform: uppercase;}
         .review-box { border: 1px solid #BDC3C7; text-align: left; padding: 12px; margin-top: 8px; font-size: 13px; line-height: 1.5; background: #FFF9F9; border-left: 5px solid #FF0000; }
+        .review-box.box-correct { background: #F4FBF7; border-left: 5px solid #2ECC71; }
     </style>
 </head>
 <body>
@@ -311,6 +313,7 @@
             <div class="score-output" id="totalScoreTarget">0 / 200</div>
             <div id="subjectScoreBreakdownBox" style="text-align:left; background:#F8F9F9; padding:12px; font-size:13px; line-height:1.6; border:1px solid #BDC3C7; margin-bottom:15px;"></div>
             
+            <!-- Real-Time Answer Sheet Analysis Panel -->
             <div id="wrongQuestionsReviewPanel" style="text-align:left; margin-bottom:20px;"></div>
             
             <button class="login-btn" style="margin:0 auto; display:block; width:150px;" onclick="window.location.reload()">Restart Portal</button>
@@ -323,7 +326,6 @@
         let activeTestSessionPool = [];
         let globalPointerIndex = 0;
         
-        // Exact 3 Hours countdown defined in total trackable execution seconds
         let totalSecondsRemaining = 180 * 60; 
         let trackingIntervalEngine = null;
 
@@ -342,15 +344,12 @@
         function authenticateUserLogin() {
             const rawId = document.getElementById('candidateIdInput').value.trim();
             const rawPass = document.getElementById('candidatePassInput').value.trim();
-            
-            // Master security authorization password definition
             const MASTER_PASSWORD = "NUST2026"; 
             
             if(!rawId || !rawPass) { 
                 alert("Access Error: Both Candidate Roll Number and Access Password are required to log in."); 
                 return; 
             }
-            
             if(rawPass !== MASTER_PASSWORD) {
                 alert("Access Denied: Invalid Access Password. You are not authorized to access this exam session.");
                 return;
@@ -359,7 +358,6 @@
             document.getElementById('displayCandidateId').innerText = rawId;
             document.getElementById('loginScreenView').style.display = 'none';
             document.getElementById('examPortalView').style.display = 'block';
-            
             launchTestEngine();
         }
 
@@ -376,7 +374,6 @@
 
         function launchTestEngine() {
             activeTestSessionPool = [];
-            
             if (typeof QUESTION_BANK === 'undefined') {
                 alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please check your file configurations.");
                 return;
@@ -395,14 +392,12 @@
             
             updateTimerDisplayElement();
             executeCountdownTimer();
-            
             refreshWorkspaceUI();
             generateNavigationMatrix();
         }
 
         function executeCountdownTimer() {
             if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
-            
             trackingIntervalEngine = setInterval(() => {
                 if (totalSecondsRemaining <= 0) {
                     clearInterval(trackingIntervalEngine);
@@ -418,19 +413,13 @@
             let hours = Math.floor(totalSecondsRemaining / 3600);
             let minutes = Math.floor((totalSecondsRemaining % 3600) / 60);
             let seconds = totalSecondsRemaining % 60;
-
-            let formattedTimeStr = 
-                String(hours).padStart(2, '0') + ":" + 
-                String(minutes).padStart(2, '0') + ":" + 
-                String(seconds).padStart(2, '0');
-
+            let formattedTimeStr = String(hours).padStart(2, '0') + ":" + String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
             document.getElementById('timerClockMinutes').innerText = formattedTimeStr;
         }
 
         function refreshWorkspaceUI() {
             if(activeTestSessionPool.length === 0) return;
             const currentQuestionObj = activeTestSessionPool[globalPointerIndex];
-            
             let subjectCleanText = currentQuestionObj.sectionKeyName.toUpperCase();
             if(subjectCleanText === "MATH") subjectCleanText = "MATHEMATICS";
             
@@ -448,7 +437,6 @@
                     currentQuestionObj.chosenIndexValue = idx;
                     refreshWorkspaceUI();
                 };
-                
                 optRow.innerHTML = `
                     <input type="radio" class="option-radio-input" name="nust_radio" ${currentQuestionObj.chosenIndexValue === idx ? 'checked' : ''}>
                     <span>${opt}</span>
@@ -532,9 +520,8 @@
             let finalAccumulatedScore = 0;
             let structuredStats = { math: 0, physics: 0, english: 0 };
             
-            // Temporary objects to sort student errors dynamically
-            let reviewContainerHTML = `<h3 style="color:#FF0000; margin-top:20px; font-size:16px;">Detailed Error Analysis Report</h3>`;
-            let sectionsWithErrors = { math: "", physics: "", english: "" };
+            let reviewContainerHTML = `<h3 style="color:#003399; margin-top:20px; font-size:16px; text-align:center;">Comprehensive Test Evaluation Log</h3>`;
+            let sectionsWithLog = { math: "", physics: "", english: "" };
 
             activeTestSessionPool.forEach(item => {
                 const isCorrectAnswer = item.chosenIndexValue !== null && item.chosenIndexValue === item.c;
@@ -542,13 +529,21 @@
                 if(isCorrectAnswer) {
                     finalAccumulatedScore++;
                     structuredStats[item.sectionKeyName]++;
+                    
+                    // Add clean text box for correct answer
+                    sectionsWithLog[item.sectionKeyName] += `
+                        <div class="review-box box-correct">
+                            <p><strong>Question ${item.innerIndexValue}:</strong> ${item.q}</p>
+                            <p style="color:#2ECC71; font-weight:700; margin-top:4px;">🟢 Correct</p>
+                        </div>
+                    `;
                 } else {
-                    // Generate tracking box for wrong or unattempted item
                     const chosenText = item.chosenIndexValue !== null ? item.a[item.chosenIndexValue] : "Unattempted";
                     const correctText = item.a[item.c];
                     const explanationText = item.e ? item.e : "No reference explanation provided for this conceptual evaluation.";
                     
-                    sectionsWithErrors[item.sectionKeyName] += `
+                    // Add error details block for wrong responses
+                    sectionsWithLog[item.sectionKeyName] += `
                         <div class="review-box">
                             <p><strong>Question ${item.innerIndexValue}:</strong> ${item.q}</p>
                             <p style="color:#C0392B; font-weight:600; margin-top:4px;">❌ Your Response: ${chosenText}</p>
@@ -559,17 +554,13 @@
                 }
             });
 
-            // Construct sorted list view by subject blocks
-            Object.keys(sectionsWithErrors).forEach(key => {
-                if(sectionsWithErrors[key] !== "") {
+            // Combine performance outputs strictly categorized under subject sections
+            Object.keys(sectionsWithLog).forEach(key => {
+                if(sectionsWithLog[key] !== "") {
                     let label = key === "math" ? "Mathematics" : key === "physics" ? "Physics" : "English";
-                    reviewContainerHTML += `<div class="review-header">${label} Mistakes</div>` + sectionsWithErrors[key];
+                    reviewContainerHTML += `<div class="review-header">${label} Performance Record</div>` + sectionsWithLog[key];
                 }
             });
-
-            if(finalAccumulatedScore === 200) {
-                reviewContainerHTML += `<p style="color:#27AE60; font-weight:bold; margin-top:10px;">Perfect validation run! Zero optimization mistakes detected.</p>`;
-            }
 
             document.getElementById('totalScoreTarget').innerText = `${finalAccumulatedScore} / 200`;
             document.getElementById('subjectScoreBreakdownBox').innerHTML = `
