@@ -1,4 +1,3 @@
-// New clean 3-subject matrix matching your updated layout code
 const QUESTION_BANK = {
     math: [
         { id: "m1", q: "What is the general term of a binomial expansion?", a: ["T_r", "T_{r+1}", "T_{n}", "T_{r-1}"], c: 1 },
