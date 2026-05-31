@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NUST Computer Based Entry Test (CBNET) Mock</title>
+    <script src="questions.js"></script>
+    <style>
+        :root {
+            --nust-blue: #0b3c5d;
+            --nust-gold: #d9b310;
+            --light-bg: #f5f7fa;
+            --border-color: #ccd1d9;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; user-select: none; }
+        body { background-color: var(--light-bg); display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* Top Banner matching original NUST portal Layout */
+        header { background: var(--nust-blue); color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--nust-gold); }
+        header h1 { font-size: 18px; font-weight: bold; }
+        .timer-box { background: #328cc1; padding: 6px 15px; font-weight: bold; border-radius: 4px; font-size: 16px; min-width: 140px; text-align: center; }
+
+        /* Main Workbench Wrapper */
+        .main-container { display: flex; flex: 1; overflow: hidden; }
+
+        /* Left Side Panel: Navigation Grid Controls */
+        .sidebar { width: 320px; background: white; border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
+        .subject-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: #e6e9ed; padding: 5px; }
+        .tab-btn { background: #328cc1; color: white; border: none; padding: 8px 2px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; text-align: center; }
+        .tab-btn.active { background: var(--nust-blue); border-bottom: 3px solid var(--nust-gold); }
+        
+        .grid-container { flex: 1; overflow-y: auto; padding: 10px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; align-content: flex-start; }
+        .q-btn { background: #e6e9ed; border: 1px solid var(--border-color); padding: 8px 0; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; border-radius: 3px; }
+        .q-btn.current { border: 2px solid var(--nust-blue); transform: scale(1.05); }
+        .q-btn.answered { background: #2ecc71; color: white; border-color: #27ae60; }
+        .q-btn.flagged { background: #f39c12; color: white; border-color: #d35400; }
+
+        /* Center Content Area: Question Canvas */
+        .exam-area { flex: 1; display: flex; flex-direction: column; background: white; padding: 30px; overflow-y: auto; }
+        .section-title { font-size: 14px; font-weight: bold; color: var(--nust-blue); border-bottom: 2px solid #e6e9ed; padding-bottom: 8px; margin-bottom: 20px; text-transform: uppercase; }
+        .question-text { font-size: 17px; line-height: 1.6; font-weight: bold; color: #333; margin-bottom: 25px; }
+        
+        .options-container { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        .option-card { display: flex; align-items: center; background: var(--light-bg); border: 1px solid var(--border-color); padding: 14px 20px; border-radius: 5px; cursor: pointer; transition: all 0.2s; }
+        .option-card:hover { background: #e6f2ff; border-color: #328cc1; }
+        .option-card.selected { background: #d0e1fd; border-color: var(--nust-blue); font-weight: bold; }
+        .option-radio { margin-right: 15px; transform: scale(1.3); cursor: pointer; }
+        
+        /* Bottom Control Panel Layout */
+        .control-bar { padding: 15px 30px; background: #e6e9ed; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+        .btn { padding: 10px 22px; font-size: 14px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; min-width: 100px; }
+        .btn-blue { background: var(--nust-blue); color: white; }
+        .btn-gold { background: var(--nust-gold); color: #333; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-grey { background: #95a5a6; color: white; }
+
+        /* Stats Panel */
+        .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 10px; background: #f8f9fa; border-top: 1px solid var(--border-color); font-size: 12px; }
+        
+        /* Modal Screen overlay */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 40px; border-radius: 8px; text-align: center; max-width: 500px; width: 90%; border-top: 6px solid var(--nust-blue); }
+        .modal h2 { margin-bottom: 15px; color: var(--nust-blue); }
+        .score-display { font-size: 48px; font-weight: bold; color: #2ecc71; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>NUST Entry Test Mock System</h1>
+            <div style="font-size: 12px; opacity: 0.9; margin-top: 2px;">Engineering & Computing Stream</div>
+        </div>
+        <div class="timer-box" id="timeDisplay">180:00</div>
+    </header>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="subject-tabs">
+                <button class="tab-btn active" onclick="switchSection('math')">Math<br>(80)</button>
+                <button class="tab-btn" onclick="switchSection('physics')">Physics<br>(60)</button>
+                <button class="tab-btn" onclick="switchSection('chemistry')">Chem<br>(30)</button>
+                <button class="tab-btn" onclick="switchSection('english')">Eng<br>(20)</button>
+                <button class="tab-btn" onclick="switchSection('iq')">IQ<br>(10)</button>
+            </div>
+            <div class="grid-container" id="navGrid"></div>
+            
+            <div class="stats-summary">
+                <div>Answered: <strong id="statAnswered" style="color:#2ecc71">0</strong> / 200</div>
+                <div>Flagged: <strong id="statFlagged" style="color:#f39c12">0</strong></div>
+            </div>
+        </div>
+
+        <div class="exam-area">
+            <div class="section-title" id="sectionHeader">Mathematics Section</div>
+            <div class="question-text" id="questionBox">Loading test questions pool...</div>
+            <div class="options-container" id="optionsBox"></div>
+        </div>
+    </div>
+
+    <div class="control-bar">
+        <div>
+            <button class="btn btn-gold" onclick="toggleFlag()">Flag / Review</button>
+            <button class="btn btn-grey" onclick="clearSelection()" style="margin-left: 8px;">Clear Answer</button>
+        </div>
+        <div>
+            <button class="btn btn-blue" onclick="navigateQuestion(-1)">Previous</button>
+            <button class="btn btn-blue" onclick="navigateQuestion(1)" style="margin-left: 10px;">Next</button>
+            <button class="btn btn-danger" onclick="confirmSubmit()" style="margin-left: 30px;">End Test</button>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2>Test Evaluation Finished</h2>
+            <p>You have successfully submitted your NUST Mock Examination.</p>
+            <div class="score-display" id="finalScore">0 / 200</div>
+            <div id="sectionBreakdown" style="text-align: left; margin-bottom: 25px; line-height: 1.6; font-size: 14px; background: #f8f9fa; padding: 15px; border-radius: 5px;"></div>
+            <button class="btn btn-blue" onclick="window.location.reload()">Generate New Mock Test</button>
+        </div>
+    </div>
+
+    <script>
+        // Exact NUST NET Question Blueprint structure
+        const BLUEPRINT = { math: 80, physics: 60, chemistry: 30, english: 20, iq: 10 };
+        let finalActiveSessionPool = [];
+        let globalIndex = 0;
+        let timeRemaining = 180 * 60; // Exact 3 Hours countdown
+        let timerInterval;
+
+        // Dynamic Random Fisher-Yates Pooling Array mechanism
+        function gatherRandomSample(sourceArr, sizeNeeded) {
+            let shuffled = [...sourceArr].sort(() => 0.5 - Math.random());
+            // Safe fallback structure if the pool runs shorter than requested size
+            while(shuffled.length < sizeNeeded) {
+                shuffled = shuffled.concat(shuffled);
+            }
+            return shuffled.slice(0, sizeNeeded).map(item => ({
+                ...item,
+                userSelectedOption: null,
+                isFlaggedForReview: false
+            }));
+        }
+
+        function initTestEngine() {
+            // Pool dynamically from definitions defined inside external layout schema 
+            Object.keys(BLUEPRINT).forEach(sec => {
+                const pooledSubset = gatherRandomSample(QUESTION_BANK[sec], BLUEPRINT[sec]);
+                pooledSubset.forEach((q, idx) => {
+                    q.displayIndex = idx + 1;
+                    q.section = sec;
+                });
+                finalActiveSessionPool = finalActiveSessionPool.concat(pooledSubset);
+            });
+            
+            startCountdown();
+            renderQuestionView();
+            rebuildNavigationGrid();
+        }
+
+        function startCountdown() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    evaluateExam();
+                } else {
+                    timeRemaining--;
+                    let mins = Math.floor(timeRemaining / 60);
+                    let secs = timeRemaining % 60;
+                    document.getElementById('timeDisplay').innerText = 
+                        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+            }, 1000);
+        }
+
+        function renderQuestionView() {
+            const currentQ = finalActiveSessionPool[globalIndex];
+            
+            document.getElementById('sectionHeader').innerText = `${currentQ.section} Section — Question ${currentQ.displayIndex} of ${BLUEPRINT[currentQ.section]}`;
+            document.getElementById('questionBox').innerText = currentQ.q;
+            
+            const optionsBox = document.getElementById('optionsBox');
+            optionsBox.innerHTML = '';
+            
+            currentQ.a.forEach((opt, idx) => {
+                const card = document.createElement('div');
+                card.className = `option-card ${currentQ.userSelectedOption === idx ? 'selected' : ''}`;
+                card.onclick = () => selectOption(idx);
+                
+                card.innerHTML = `
+                    <input type="radio" class="option-radio" name="mcq_opt" ${currentQ.userSelectedOption === idx ? 'checked' : ''}>
+                    <span>${opt}</span>
+                `;
+                optionsBox.appendChild(card);
+            });
+
+            // Set dynamic highlighted indicators in left container grid view
+            document.querySelectorAll('.q-btn').forEach((btn, i) => {
+                btn.classList.toggle('current', i === globalIndex);
+            });
+            updateMetricsCounters();
+        }
+
+        function rebuildNavigationGrid() {
+            const grid = document.getElementById('navGrid');
+            grid.innerHTML = '';
+            const activeSection = finalActiveSessionPool[globalIndex].section;
+
+            finalActiveSessionPool.forEach((q, index) => {
+                if(q.section !== activeSection) return; // Display exclusively current active module blocks
+                
+                const btn = document.createElement('button');
+                btn.className = 'q-btn';
+                btn.innerText = q.displayIndex;
+                
+                if (q.userSelectedOption !== null) btn.classList.add('answered');
+                if (q.isFlaggedForReview) btn.classList.add('flagged');
+                if (index === globalIndex) btn.classList.add('current');
+                
+                btn.onclick = () => { globalIndex = index; renderQuestionView(); };
+                grid.appendChild(btn);
+            });
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${activeSection}'`));
+            });
+        }
+
+        function switchSection(sectionKey) {
+            globalIndex = finalActiveSessionPool.findIndex(q => q.section === sectionKey);
+            renderQuestionView();
+            rebuildNavigationGrid();
+        }
+
+        function selectOption(index) {
+            finalActiveSessionPool[globalIndex].userSelectedOption = index;
+            renderQuestionView();
+            rebuildNavigationGrid();
+        }
+
+        function clearSelection() {
+            finalActiveSessionPool[globalIndex].userSelectedOption = null;
+            renderQuestionView();
+            rebuildNavigationGrid();
+        }
+
+        function toggleFlag() {
+            finalActiveSessionPool[globalIndex].isFlaggedForReview = !finalActiveSessionPool[globalIndex].isFlaggedForReview;
+            renderQuestionView();
+            rebuildNavigationGrid();
+        }
+
+        function navigateQuestion(step) {
+            let nextIdx = globalIndex + step;
+            if (nextIdx >= 0 && nextIdx < finalActiveSessionPool.length) {
+                const currentSec = finalActiveSessionPool[globalIndex].section;
+                globalIndex = nextIdx;
+                if(finalActiveSessionPool[globalIndex].section !== currentSec) {
+                    rebuildNavigationGrid();
+                } else {
+                    renderQuestionView();
+                }
+            }
+        }
+
+        function updateMetricsCounters() {
+            let ans = finalActiveSessionPool.filter(q => q.userSelectedOption !== null).length;
+            let flg = finalActiveSessionPool.filter(q => q.isFlaggedForReview).length;
+            document.getElementById('statAnswered').innerText = ans;
+            document.getElementById('statFlagged').innerText = flg;
+        }
+
+        function confirmSubmit() {
+            if(confirm("Are you absolutely sure you want to end your exam and calculate scores? This cannot be undone.")) {
+                evaluateExam();
+            }
+        }
+
+        function evaluateExam() {
+            clearInterval(timerInterval);
+            let absoluteScore = 0;
+            let breakdownStats = { math: 0, physics: 0, chemistry: 0, english: 0, iq: 0 };
+
+            finalActiveSessionPool.forEach(q => {
+                if(q.userSelectedOption === q.c) {
+                    absoluteScore++;
+                    breakdownStats[q.section]++;
+                }
+            });
+
+            document.getElementById('finalScore').innerText = `${absoluteScore} / 200`;
+            
+            document.getElementById('sectionBreakdown').innerHTML = `
+                <strong>Subject Wise Score Distribution Breakdown:</strong><br>
+                • Mathematics Score: ${breakdownStats.math} / 80<br>
+                • Physics Score: ${breakdownStats.physics} / 60<br>
+                • Chemistry Score: ${breakdownStats.chemistry} / 30<br>
+                • English Score: ${breakdownStats.english} / 20<br>
+                • Intelligence (IQ) Score: ${breakdownStats.iq} / 10
+            `;
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        // Initialize Engine Core runtime once structure finishes booting
+        window.onload = initTestEngine;
+    </script>
+</body>
+</html>
