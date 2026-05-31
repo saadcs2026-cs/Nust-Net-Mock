@@ -9,125 +9,176 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
         body { background-color: #FFFFFF; padding: 15px; user-select: none; }
         
-        /* Main Layout Table styling matching original demo */
+        /* ------------------ LOGIN PAGE STYLING ------------------ */
+        .login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; }
+        .login-container { width: 450px; border: 3px double #0055A5; padding: 25px; background: #FFFFFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .login-header { color: #003399; font-size: 18px; font-weight: bold; border-bottom: 2px solid #0055A5; padding-bottom: 8px; margin-bottom: 20px; text-align: center; }
+        .nust-logo-sub { text-align: center; font-size: 12px; color: #FF0000; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; color: #333; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px 10px; border: 1px solid #0055A5; font-size: 14px; outline: none; }
+        .form-group input:focus { background: #FAFDFE; border-color: #FF0000; }
+        .login-btn { width: 100%; padding: 10px; background: linear-gradient(to bottom, #3498DB, #2980B9); color: white; border: 1px solid #2471A3; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        .login-btn:hover { background: #2980B9; }
+        .instructions-box { width: 450px; margin-top: 15px; border: 1px dashed #FF0000; background: #FFF5F5; padding: 12px; font-size: 11px; color: #555; line-height: 1.4; }
+
+        /* ------------------ EXAM INTERFACE STYLING ------------------ */
+        .exam-interface { display: none; }
         .test-table { width: 100%; border-collapse: collapse; border: 3px double #0055A5; margin-bottom: 10px; }
-        .top-header-row { background: #FFFFFF; border-bottom: 2px solid #0055A5; color: #008000; font-weight: bold; padding: 5px 10px; font-size: 14px; }
-        .stream-title { text-align: center; color: #FF0000; font-weight: bold; font-size: 14px; border-bottom: 2px solid #0055A5; padding: 5px; }
+        .top-header-row { background: #FFFFFF; border-bottom: 2px solid #0055A5; color: #008000; font-weight: bold; padding: 6px 10px; font-size: 14px; text-transform: uppercase; }
+        .stream-title { text-align: center; color: #FF0000; font-weight: bold; font-size: 13px; border-bottom: 2px solid #0055A5; padding: 5px; background: #F9F9F9; }
         
-        /* Question Content Layout Split */
-        .workspace-container { display: flex; border-bottom: 2px solid #0055A5; min-height: 380px; }
+        .workspace-container { display: flex; border-bottom: 2px solid #0055A5; min-height: 360px; }
         .left-main-canvas { flex: 1; display: flex; flex-direction: column; border-right: 2px solid #0055A5; }
         
-        .question-meta-bar { background: #D4E6F1; color: #003399; font-weight: bold; font-size: 13px; padding: 4px 10px; border-bottom: 1px solid #0055A5; display: flex; justify-content: space-between; }
-        .question-body-pane { padding: 15px; font-size: 15px; font-weight: bold; color: #000; min-height: 120px; border-bottom: 2px solid #0055A5; line-height: 1.5; }
+        .question-meta-bar { background: #D4E6F1; color: #003399; font-weight: bold; font-size: 13px; padding: 5px 10px; border-bottom: 1px solid #0055A5; display: flex; justify-content: space-between; }
+        .question-body-pane { padding: 20px; font-size: 15px; font-weight: bold; color: #000; min-height: 110px; border-bottom: 2px solid #0055A5; line-height: 1.6; background: #FFF; }
         
-        .options-pane-title { background: #D4E6F1; color: #003399; font-weight: bold; font-size: 13px; padding: 4px 10px; border-bottom: 1px solid #0055A5; }
-        .options-list-wrapper { padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #FAFDFE; flex: 1; }
+        .options-pane-title { background: #D4E6F1; color: #003399; font-weight: bold; font-size: 13px; padding: 5px 10px; border-bottom: 1px solid #0055A5; }
+        .options-list-wrapper { padding: 15px; display: flex; flex-direction: column; gap: 8px; background: #FFFFFF; flex: 1; }
         
-        .option-row-item { display: flex; align-items: flex-start; border: 1px solid #0055A5; padding: 8px 12px; background: white; cursor: pointer; border-radius: 2px; }
-        .option-row-item:hover { background: #EBF5FB; }
-        .option-row-item.selected { background: #D4E6F1; border: 1px dashed #003399; font-weight: bold; }
-        .option-radio-input { margin-right: 12px; margin-top: 3px; transform: scale(1.1); }
+        .option-row-item { display: flex; align-items: center; border: 1px solid #A9CCE3; padding: 10px 15px; background: white; cursor: pointer; }
+        .option-row-item:hover { background: #EBF5FB; border-color: #2980B9; }
+        .option-row-item.selected { background: #D4E6F1; border: 1px solid #0055A5; font-weight: bold; }
+        .option-radio-input { margin-right: 12px; transform: scale(1.2); cursor: pointer; }
         
-        /* Right Side Portrait Panel */
-        .right-photo-panel { width: 160px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: #FFFFFF; }
-        .photo-box-frame { width: 130px; height: 150px; border: 1px solid #003399; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: bold; font-size: 16px; color: #333; background: #FAFAFA; margin-bottom: 15px; }
+        .right-photo-panel { width: 170px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: #FFFFFF; }
+        .photo-box-frame { width: 130px; height: 150px; border: 1px solid #003399; display: flex; align-items: center; justify-content: center; text-align: center; font-weight: bold; font-size: 13px; color: #555; background: #FAFAFA; margin-bottom: 12px; }
 
         /* Retro Navigation Button Grid Block */
         .navigation-grid-wrapper { border: 1px solid #0055A5; margin: 10px 0; padding: 8px; background: #F2F4F4; display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; }
-        .nav-square-btn { background: #E5E7E9; border: 1px solid #7F8C8D; text-align: center; font-size: 11px; padding: 4px 0; cursor: pointer; font-weight: bold; color: #000; }
-        .nav-square-btn.active-focus { border: 2px solid #FF0000; background: #FFF; }
+        .nav-square-btn { background: #E5E7E9; border: 1px solid #7F8C8D; text-align: center; font-size: 11px; padding: 5px 0; cursor: pointer; font-weight: bold; color: #000; }
+        .nav-square-btn.active-focus { border: 2px solid #FF0000; background: #FFF; color: #FF0000; }
         .nav-square-btn.filled { background: #2ECC71; color: white; border-color: #27AE60; }
         .nav-square-btn.flagged-review { background: #F1C40F; color: black; border-color: #D4AC0D; }
 
-        /* Bottom Controls Bar Styling matching original icons */
-        .bottom-action-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 5px; background: #FFFFFF; }
-        .timer-dashboard { display: flex; border: 1px solid #008000; background: #FFFFFF; height: 52px; align-items: center; }
-        .timer-left-banner { background: #008000; color: #FFFFFF; font-size: 11px; padding: 5px; height: 100%; display: flex; flex-direction: column; justify-content: center; font-weight: bold; text-align: center; }
-        .timer-countdown-clock { font-size: 26px; font-weight: bold; color: #008000; padding: 0 15px; font-family: monospace; }
+        /* Bottom Controls Bar Styling */
+        .bottom-action-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; background: #FFFFFF; }
+        .timer-dashboard { display: flex; border: 1px solid #008000; background: #FFFFFF; height: 48px; align-items: center; }
+        .timer-left-banner { background: #008000; color: #FFFFFF; font-size: 10px; padding: 5px; height: 100%; display: flex; flex-direction: column; justify-content: center; font-weight: bold; text-align: center; text-transform: uppercase; }
+        .timer-countdown-clock { font-size: 24px; font-weight: bold; color: #008000; padding: 0 12px; font-family: monospace; min-width: 110px; text-align: center; }
         
-        .button-bar-right { display: flex; gap: 5px; align-items: center; }
-        .retro-control-btn { padding: 6px 14px; font-size: 12px; font-weight: bold; color: white; border: 1px solid #2471A3; cursor: pointer; border-radius: 3px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.3); display: flex; align-items: center; gap: 4px; }
-        .btn-system { background: linear-gradient(to bottom, #3498DB, #2980B9); }
-        .btn-system:hover { background: #2980B9; }
-        .btn-navigational { background: linear-gradient(to bottom, #5DADE2, #2874A6); }
-        .btn-navigational:hover { background: #2874A6; }
-        .btn-finish-exam { background: linear-gradient(to bottom, #E74C3C, #C0392B); border-color: #922B21; }
-        
-        /* Modal Window layout */
-        .modal-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; }
-        .modal-body { background: white; border: 3px double #0055A5; padding: 30px; text-align: center; max-width: 450px; width: 90%; }
-        .score-output { font-size: 36px; font-weight: bold; color: #008000; margin: 15px 0; }
         .finish-trigger-link { color: #003399; font-weight: bold; text-decoration: underline; cursor: pointer; font-size: 13px; }
+        .finish-trigger-link:hover { color: #FF0000; }
+
+        .button-bar-right { display: flex; gap: 4px; align-items: center; }
+        .retro-control-btn { padding: 6px 12px; font-size: 12px; font-weight: bold; color: white; border: 1px solid #2471A3; cursor: pointer; border-radius: 3px; display: flex; align-items: center; }
+        .btn-system { background: linear-gradient(to bottom, #3498DB, #2980B9); }
+        .btn-navigational { background: linear-gradient(to bottom, #5DADE2, #2874A6); }
+        .btn-review { background: linear-gradient(to bottom, #F39C12, #D35400); border-color: #B03A2E; }
+        .btn-subject { background: linear-gradient(to bottom, #34495E, #2C3E50); border-color: #1A252F; }
+        .retro-control-btn:hover { opacity: 0.9; }
+        
+        /* Modal Results Layout */
+        .modal-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; }
+        .modal-body { background: white; border: 3px double #0055A5; padding: 25px; text-align: center; max-width: 450px; width: 90%; }
+        .score-output { font-size: 38px; font-weight: bold; color: #008000; margin: 15px 0; font-family: monospace; }
     </style>
 </head>
 <body>
 
-    <div class="test-table">
-        <div class="top-header-row" id="currentSubjectHeader">Loading Subject Section...</div>
-        <div class="stream-title">Engineering/Computer Science/BS Mathematics (Without Chemistry)</div>
-        
-        <div class="workspace-container">
-            <div class="left-main-canvas">
-                <div class="question-meta-bar">
-                    <span id="questionNumTracker">Question No : 1 of 100</span>
-                    <span>Marks: 1</span>
-                </div>
-                <div class="question-body-pane" id="questionTextBox">System configuration booting...</div>
-                
-                <div class="options-pane-title">Answer ( Please select your correct option )</div>
-                <div class="options-list-wrapper" id="optionsRadioGroup"></div>
+    <div class="login-screen" id="loginScreenView">
+        <div class="login-container">
+            <div class="login-header">National University of Sciences & Technology</div>
+            <div class="nust-logo-sub">Computer Based Entry Test Portal (CBNET)</div>
+            
+            <div class="form-group">
+                <label>Candidate Roll Number / ID</label>
+                <input type="text" id="candidateIdInput" value="NUST-2026-ICS" placeholder="Enter your roll number">
+            </div>
+            <div class="form-group">
+                <label>Access Password</label>
+                <input type="password" id="candidatePassInput" value="12345" placeholder="Enter password">
             </div>
             
-            <div class="right-photo-panel">
-                <div class="photo-box-frame">Your<br>Image<br>here</div>
-                <div style="font-size:11px; font-weight:bold; color:#0055A5; text-align:center;">
-                    Candidate ID:<br><span style="color:#FF0000">NUST026</span>
-                </div>
-            </div>
+            <button class="login-btn" onclick="authenticateUserLogin()">Login & Start Assessment</button>
+        </div>
+        <div class="instructions-box">
+            <b>Important System Instructions:</b><br>
+            1. Total Test duration is exactly 180 minutes.<br>
+            2. The test pattern contains Mathematics (100), Physics (60), and English (40).<br>
+            3. Click the <b>💾 Save</b> button after choosing an option to record your choice and automatically advance.
         </div>
     </div>
 
-    <div class="navigation-grid-wrapper" id="navButtonMatrixGrid"></div>
-
-    <div class="bottom-action-row">
-        <div class="timer-dashboard">
-            <div class="timer-left-banner">Remaining<br>Time</div>
-            <div class="timer-countdown-clock" id="timerClockMinutes">180 min</div>
+    <div class="exam-interface" id="examPortalView">
+        <div class="test-table">
+            <div class="top-header-row" id="currentSubjectHeader">MATHEMATICS</div>
+            <div class="stream-title">Engineering / Computing / ICS Stream Mock Portal</div>
+            
+            <div class="workspace-container">
+                <div class="left-main-canvas">
+                    <div class="question-meta-bar">
+                        <span id="questionNumTracker">Question No : 1 of 100</span>
+                        <span>Marks: 1</span>
+                    </div>
+                    <div class="question-body-pane" id="questionTextBox">Loading question...</div>
+                    
+                    <div class="options-pane-title">Answer ( Please select your correct option )</div>
+                    <div class="options-list-wrapper" id="optionsRadioGroup"></div>
+                </div>
+                
+                <div class="right-photo-panel">
+                    <div class="photo-box-frame">Your<br>Image<br>here</div>
+                    <div style="font-size:11px; font-weight:bold; color:#0055A5; text-align:center; line-height:1.4;">
+                        Candidate ID:<br><span style="color:#FF0000" id="displayCandidateId">NUST026</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div style="text-align: center;">
-            <span class="finish-trigger-link" onclick="triggerSubmitConfirmation()">Click here to <b>FINISH</b> Your Test</span>
-        </div>
+        <div class="navigation-grid-wrapper" id="navButtonMatrixGrid"></div>
 
-        <div class="button-bar-right">
-            <button class="retro-control-btn btn-system" onclick="saveAnswerState()">💾 Save</button>
-            <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(1)">▶ Next</button>
-            <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(-1)">◀ Prev</button>
-            <button class="retro-control-btn btn-system" style="background: linear-gradient(to bottom, #F39C12, #D35400); border-color:#B03A2E;" onclick="flagQuestionToggle()">📋 Review</button>
-            <button class="retro-control-btn btn-navigational" onclick="switchSubjectCluster('math')">Math Section</button>
-            <button class="retro-control-btn btn-navigational" onclick="switchSubjectCluster('physics')">Phys Section</button>
-            <button class="retro-control-btn btn-navigational" onclick="switchSubjectCluster('english')">Eng Section</button>
+        <div class="bottom-action-row">
+            <div class="timer-dashboard">
+                <div class="timer-left-banner">Remaining<br>Time</div>
+                <div class="timer-countdown-clock" id="timerClockMinutes">180 min</div>
+            </div>
+
+            <div>
+                <span class="finish-trigger-link" onclick="triggerSubmitConfirmation()">Click here to <b>FINISH</b> Your Test</span>
+            </div>
+
+            <div class="button-bar-right">
+                <button class="retro-control-btn btn-system" onclick="saveAnswerState()">💾 Save</button>
+                <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(1)">Next ▶</button>
+                <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(-1)">◀ Prev</button>
+                <button class="retro-control-btn btn-review" onclick="flagQuestionToggle()">📋 Review</button>
+                <button class="retro-control-btn btn-subject" onclick="switchSubjectCluster('math')">Math (100)</button>
+                <button class="retro-control-btn btn-subject" onclick="switchSubjectCluster('physics')">Phys (60)</button>
+                <button class="retro-control-btn btn-subject" onclick="switchSubjectCluster('english')">Eng (40)</button>
+            </div>
         </div>
     </div>
 
     <div class="modal-screen" id="reportCardModalOverlay">
         <div class="modal-body">
-            <h2 style="color:#0055A5;">NUST Mock Exam Result Summary</h2>
-            <p style="margin-top:10px; font-size:14px; color:#555;">Evaluation processed under authentic NET rules. No negative marking applied.</p>
+            <h2 style="color:#0055A5; font-size:20px;">NUST Examination Result Summary</h2>
+            <p style="margin-top:8px; font-size:13px; color:#555;">Evaluation finalized successfully. Scoring metric: +1 for correct, 0 for incorrect.</p>
             <div class="score-output" id="totalScoreTarget">0 / 200</div>
-            <div id="subjectScoreBreakdownBox" style="text-align:left; background:#F8F9F9; padding:12px; font-size:13px; line-height:1.6; border:1px solid #BDC3C7; margin-bottom:20px;"></div>
-            <button class="retro-control-btn btn-finish-exam" style="margin:0 auto; display:block;" onclick="window.location.reload()">Start New Session</button>
+            <div id="subjectScoreBreakdownBox" style="text-align:left; background:#F8F9F9; padding:12px; font-size:13px; line-height:1.6; border:1px solid #BDC3C7; margin-bottom:15px;"></div>
+            <button class="login-btn" style="margin:0 auto; display:block; width:150px;" onclick="window.location.reload()">Restart Portal</button>
         </div>
     </div>
 
     <script>
-        // Exact 3-Subject ICS/Computing Stream Setup
+        // Stream Specific Configuration: 100 Math, 60 Physics, 40 English
         const TARGET_BLUEPRINT = { math: 100, physics: 60, english: 40 };
         let activeTestSessionPool = [];
         let globalPointerIndex = 0;
-        let countdownTimerSeconds = 180 * 60; // 3 Hours
+        let countdownTimerMinutes = 180;
         let trackingIntervalEngine;
+
+        function authenticateUserLogin() {
+            const rawId = document.getElementById('candidateIdInput').value.trim();
+            if(!rawId) { alert("Please input a valid Candidate Roll Number."); return; }
+            
+            document.getElementById('displayCandidateId').innerText = rawId;
+            document.getElementById('loginScreenView').style.display = 'none';
+            document.getElementById('examPortalView').style.display = 'block';
+            
+            launchTestEngine();
+        }
 
         function pullRandomPool(source, limit) {
             let copy = [...source].sort(() => 0.5 - Math.random());
@@ -142,8 +193,14 @@
 
         function launchTestEngine() {
             activeTestSessionPool = [];
+            // Safe guard loop if QUESTION_BANK is missing or corrupted
+            if (typeof QUESTION_BANK === 'undefined') {
+                alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please make sure you updated it on GitHub.");
+                return;
+            }
+            
             Object.keys(TARGET_BLUEPRINT).forEach(sec => {
-                if (QUESTION_BANK && QUESTION_BANK[sec]) {
+                if (QUESTION_BANK[sec]) {
                     const localizedSubSet = pullRandomPool(QUESTION_BANK[sec], TARGET_BLUEPRINT[sec]);
                     localizedSubSet.forEach((item, index) => {
                         item.innerIndexValue = index + 1;
@@ -152,31 +209,34 @@
                     activeTestSessionPool = activeTestSessionPool.concat(localizedSubSet);
                 }
             });
+            
             executeCountdownTimer();
             refreshWorkspaceUI();
             generateNavigationMatrix();
         }
 
         function executeCountdownTimer() {
+            document.getElementById('timerClockMinutes').innerText = `${countdownTimerMinutes} min`;
             clearInterval(trackingIntervalEngine);
+            
+            // Ticks down exactly 1 minute at a time
             trackingIntervalEngine = setInterval(() => {
-                if(countdownTimerSeconds <= 0) {
+                if(countdownTimerMinutes <= 1) {
                     clearInterval(trackingIntervalEngine);
                     compileExamResults();
                 } else {
-                    countdownTimerSeconds--;
-                    let minsLeft = Math.ceil(countdownTimerSeconds / 60);
-                    document.getElementById('timerClockMinutes').innerText = `${minsLeft} min`;
+                    countdownTimerMinutes--;
+                    document.getElementById('timerClockMinutes').innerText = `${countdownTimerMinutes} min`;
                 }
-            }, 1000);
+            }, 60000); 
         }
 
         function refreshWorkspaceUI() {
+            if(activeTestSessionPool.length === 0) return;
             const currentQuestionObj = activeTestSessionPool[globalPointerIndex];
             
-            // Format top bars exactly like official image specs
             let subjectCleanText = currentQuestionObj.sectionKeyName.toUpperCase();
-            if(subjectCleanText === "MATH") subjectCleanText = "Mathematics";
+            if(subjectCleanText === "MATH") subjectCleanText = "MATHEMATICS";
             
             document.getElementById('currentSubjectHeader').innerText = subjectCleanText;
             document.getElementById('questionNumTracker').innerText = `Question No : ${currentQuestionObj.innerIndexValue} of ${TARGET_BLUEPRINT[currentQuestionObj.sectionKeyName]}`;
@@ -200,7 +260,6 @@
                 radioContainer.appendChild(optRow);
             });
 
-            // Adjust targeted square grid background highlight boundaries
             document.querySelectorAll('.nav-square-btn').forEach((btn, index) => {
                 btn.classList.toggle('active-focus', index === globalPointerIndex);
             });
@@ -209,6 +268,7 @@
         function generateNavigationMatrix() {
             const gridContainer = document.getElementById('navButtonMatrixGrid');
             gridContainer.innerHTML = '';
+            if(activeTestSessionPool.length === 0) return;
             const activeSectionFilter = activeTestSessionPool[globalPointerIndex].sectionKeyName;
 
             activeTestSessionPool.forEach((item, idx) => {
@@ -220,10 +280,13 @@
                 
                 if(item.isSavedPermanently) square.classList.add('filled');
                 if(item.isFlagged) square.classList.add('flagged-review');
-                if(idx === globalPointerIndex) square.classList.add('active-focus');
+                
+                // Track matching sequence mapping arrays
+                const contextualIndex = idx;
+                if(contextualIndex === globalPointerIndex) square.classList.add('active-focus');
                 
                 square.onclick = () => {
-                    globalPointerIndex = idx;
+                    globalPointerIndex = contextualIndex;
                     refreshWorkspaceUI();
                     generateNavigationMatrix();
                 };
@@ -237,7 +300,7 @@
                 currentItem.isSavedPermanently = true;
             }
             generateNavigationMatrix();
-            shiftActiveIndex(1); // Auto advance step just like original portal setup
+            shiftActiveIndex(1); 
         }
 
         function flagQuestionToggle() {
@@ -252,9 +315,8 @@
                 globalPointerIndex = calculatedTargetIdx;
                 if(activeTestSessionPool[globalPointerIndex].sectionKeyName !== originalSectionName) {
                     generateNavigationMatrix();
-                } else {
-                    refreshWorkspaceUI();
                 }
+                refreshWorkspaceUI();
             }
         }
 
@@ -276,7 +338,6 @@
             let structuredStats = { math: 0, physics: 0, english: 0 };
 
             activeTestSessionPool.forEach(item => {
-                // Award points only for direct match against correct baseline criteria matrix
                 if(item.chosenIndexValue !== null && item.chosenIndexValue === item.c) {
                     finalAccumulatedScore++;
                     structuredStats[item.sectionKeyName]++;
@@ -285,15 +346,13 @@
 
             document.getElementById('totalScoreTarget').innerText = `${finalAccumulatedScore} / 200`;
             document.getElementById('subjectScoreBreakdownBox').innerHTML = `
-                <strong>Verified Subject Breakdown (Positive Only Scoring):</strong><br>
+                <strong>Verified Subject Breakdown:</strong><br>
                 • Mathematics Score: ${structuredStats.math} / 100<br>
                 • Physics Score: ${structuredStats.physics} / 60<br>
                 • English Score: ${structuredStats.english} / 40
             `;
             document.getElementById('reportCardModalOverlay').style.display = 'flex';
         }
-
-        window.onload = launchTestEngine;
     </script>
 </body>
 </html>
