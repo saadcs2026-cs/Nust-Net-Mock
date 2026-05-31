@@ -56,7 +56,7 @@
         .bottom-action-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; background: #FFFFFF; }
         .timer-dashboard { display: flex; border: 1px solid #008000; background: #FFFFFF; height: 48px; align-items: center; }
         .timer-left-banner { background: #008000; color: #FFFFFF; font-size: 10px; padding: 5px; height: 100%; display: flex; flex-direction: column; justify-content: center; font-weight: bold; text-align: center; text-transform: uppercase; }
-        .timer-countdown-clock { font-size: 24px; font-weight: bold; color: #008000; padding: 0 12px; font-family: monospace; min-width: 110px; text-align: center; }
+        .timer-countdown-clock { font-size: 22px; font-weight: bold; color: #008000; padding: 0 10px; font-family: monospace; min-width: 130px; text-align: center; }
         
         .finish-trigger-link { color: #003399; font-weight: bold; text-decoration: underline; cursor: pointer; font-size: 13px; }
         .finish-trigger-link:hover { color: #FF0000; }
@@ -132,7 +132,7 @@
         <div class="bottom-action-row">
             <div class="timer-dashboard">
                 <div class="timer-left-banner">Remaining<br>Time</div>
-                <div class="timer-countdown-clock" id="timerClockMinutes">180 min</div>
+                <div class="timer-countdown-clock" id="timerClockMinutes">03:00:00</div>
             </div>
 
             <div>
@@ -166,8 +166,10 @@
         const TARGET_BLUEPRINT = { math: 100, physics: 60, english: 40 };
         let activeTestSessionPool = [];
         let globalPointerIndex = 0;
-        let countdownTimerMinutes = 180;
-        let trackingIntervalEngine;
+        
+        // Exact 3 Hours countdown defined in total trackable execution seconds
+        let totalSecondsRemaining = 180 * 60; 
+        let trackingIntervalEngine = null;
 
         function authenticateUserLogin() {
             const rawId = document.getElementById('candidateIdInput').value.trim();
@@ -193,9 +195,9 @@
 
         function launchTestEngine() {
             activeTestSessionPool = [];
-            // Safe guard loop if QUESTION_BANK is missing or corrupted
+            
             if (typeof QUESTION_BANK === 'undefined') {
-                alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please make sure you updated it on GitHub.");
+                alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please double check your GitHub repository layout.");
                 return;
             }
             
@@ -210,25 +212,41 @@
                 }
             });
             
+            // Boot rendering logic chains & initialize timer immediately
+            updateTimerDisplayElement();
             executeCountdownTimer();
+            
             refreshWorkspaceUI();
             generateNavigationMatrix();
         }
 
         function executeCountdownTimer() {
-            document.getElementById('timerClockMinutes').innerText = `${countdownTimerMinutes} min`;
-            clearInterval(trackingIntervalEngine);
+            if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
             
-            // Ticks down exactly 1 minute at a time
+            // Ticks down smoothly step by step every single second
             trackingIntervalEngine = setInterval(() => {
-                if(countdownTimerMinutes <= 1) {
+                if (totalSecondsRemaining <= 0) {
                     clearInterval(trackingIntervalEngine);
                     compileExamResults();
                 } else {
-                    countdownTimerMinutes--;
-                    document.getElementById('timerClockMinutes').innerText = `${countdownTimerMinutes} min`;
+                    totalSecondsRemaining--;
+                    updateTimerDisplayElement();
                 }
-            }, 60000); 
+            }, 1000); 
+        }
+
+        function updateTimerDisplayElement() {
+            let hours = Math.floor(totalSecondsRemaining / 3600);
+            let minutes = Math.floor((totalSecondsRemaining % 3600) / 60);
+            let seconds = totalSecondsRemaining % 60;
+
+            // Formats integers securely with explicit zero paddings to mirror real NUST specs (03:00:00)
+            let formattedTimeStr = 
+                String(hours).padStart(2, '0') + ":" + 
+                String(minutes).padStart(2, '0') + ":" + 
+                String(seconds).padStart(2, '0');
+
+            document.getElementById('timerClockMinutes').innerText = formattedTimeStr;
         }
 
         function refreshWorkspaceUI() {
@@ -281,7 +299,6 @@
                 if(item.isSavedPermanently) square.classList.add('filled');
                 if(item.isFlagged) square.classList.add('flagged-review');
                 
-                // Track matching sequence mapping arrays
                 const contextualIndex = idx;
                 if(contextualIndex === globalPointerIndex) square.classList.add('active-focus');
                 
@@ -333,7 +350,7 @@
         }
 
         function compileExamResults() {
-            clearInterval(trackingIntervalEngine);
+            if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
             let finalAccumulatedScore = 0;
             let structuredStats = { math: 0, physics: 0, english: 0 };
 
