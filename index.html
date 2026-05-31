@@ -61,6 +61,7 @@
             letter-spacing: 1px;
         }
 
+        /* Animated Pulse Badge */
         .status-badge {
             display: flex;
             align-items: center;
@@ -147,6 +148,7 @@
             transform: scale(1.01);
             box-shadow: 0 6px 15px rgba(0, 51, 153, 0.4);
         }
+        .login-btn:active { transform: scale(0.99); }
 
         .instructions-box { 
             width: 100%;
@@ -162,7 +164,7 @@
             line-height: 1.5; 
         }
 
-        /* ------------------ RETRO EXAM INTERFACE STYLING (DEFAULT PC) ------------------ */
+        /* ------------------ RETRO EXAM INTERFACE STYLING ------------------ */
         .exam-interface { display: none; padding: 15px; }
         .test-table { width: 100%; border-collapse: collapse; border: 3px double #0055A5; margin-bottom: 10px; }
         .top-header-row { background: #FFFFFF; border-bottom: 2px solid #0055A5; color: #008000; font-weight: bold; padding: 6px 10px; font-size: 14px; text-transform: uppercase; }
@@ -201,63 +203,18 @@
         .finish-trigger-link { color: #003399; font-weight: bold; text-decoration: underline; cursor: pointer; font-size: 13px; }
         .finish-trigger-link:hover { color: #FF0000; }
 
-        .button-bar-right { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+        .button-bar-right { display: flex; gap: 4px; align-items: center; }
         .retro-control-btn { padding: 6px 12px; font-size: 12px; font-weight: bold; color: white; border: 1px solid #2471A3; cursor: pointer; border-radius: 3px; display: flex; align-items: center; }
         .btn-system { background: linear-gradient(to bottom, #3498DB, #2980B9); }
         .btn-navigational { background: linear-gradient(to bottom, #5DADE2, #2874A6); }
         .btn-review { background: linear-gradient(to bottom, #F39C12, #D35400); border-color: #B03A2E; }
         .btn-subject { background: linear-gradient(to bottom, #34495E, #2C3E50); border-color: #1A252F; }
+        .retro-control-btn:hover { opacity: 0.9; }
         
         /* Modal Results Layout */
         .modal-screen { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; }
         .modal-body { background: white; border: 3px double #0055A5; padding: 25px; text-align: center; max-width: 450px; width: 90%; }
         .score-output { font-size: 38px; font-weight: bold; color: #008000; margin: 15px 0; font-family: monospace; }
-
-        /* ------------------ 📱 DYNAMIC MOBILE RE-CONFIGURATIONS (Screens under 768px) ------------------ */
-        @media (max-width: 768px) {
-            .exam-interface { padding: 5px; }
-            
-            /* Unstack the workspace to put photo panel at the top/bottom */
-            .workspace-container { flex-direction: column; }
-            
-            /* Remove the rigid borders since it is stacked vertically */
-            .left-main-canvas { border-right: none; }
-            
-            /* Re-adjust the candidate profile panel to be a small horizontal strip */
-            .right-photo-panel { 
-                width: 100%; 
-                flex-direction: row; 
-                justify-content: space-between; 
-                align-items: center; 
-                padding: 10px; 
-                background: #F4F6F6;
-                border-top: 1px solid #0055A5;
-            }
-            .photo-box-frame { display: none; } /* Hide empty photo block on mobile to save screen height */
-            .right-photo-panel div { text-align: left !important; font-size: 13px !important; width: 100%; }
-
-            /* Compress grid navigation down to 10 columns instead of 20 so buttons stay large and easy to tap */
-            .navigation-grid-wrapper { grid-template-columns: repeat(10, 1fr); gap: 5px; padding: 6px; }
-            .nav-square-btn { padding: 8px 0; font-size: 13px; } /* Slightly larger touch target */
-
-            /* Re-arrange bottom navigation buttons so they don't leak off screen */
-            .bottom-action-row { flex-direction: column; gap: 12px; align-items: stretch; }
-            .timer-dashboard { justify-content: center; width: 100%; }
-            .finish-trigger-link { text-align: center; display: block; margin: 5px 0; font-size: 14px; }
-            
-            /* Make action buttons take full width grid spaces so thumbs can tap easily */
-            .button-bar-right { 
-                display: grid; 
-                grid-template-columns: repeat(2, 1fr); 
-                gap: 6px; 
-                width: 100%; 
-            }
-            .retro-control-btn { 
-                justify-content: center; 
-                padding: 12px 6px; 
-                font-size: 13px; 
-            }
-        }
     </style>
 </head>
 <body>
@@ -288,4 +245,302 @@
         <div class="instructions-box">
             <b style="color: #FFD700; font-size: 13px;">Important System Instructions:</b><br>
             • Total Test duration is exactly 180 minutes.<br>
-            • The test pattern contains Mathematics (100), Physics (60), and English (40).<br
+            • The test pattern contains Mathematics (100), Physics (60), and English (40).<br>
+            • Click the <b>💾 Save</b> button after choosing an option to record your choice and automatically advance.
+        </div>
+    </div>
+
+    <div class="exam-interface" id="examPortalView">
+        <div class="test-table">
+            <div class="top-header-row" id="currentSubjectHeader">MATHEMATICS</div>
+            <div class="stream-title">Engineering / Computing / ICS Stream Mock Portal</div>
+            
+            <div class="workspace-container">
+                <div class="left-main-canvas">
+                    <div class="question-meta-bar">
+                        <span id="questionNumTracker">Question No : 1 of 100</span>
+                        <span>Marks: 1</span>
+                    </div>
+                    <div class="question-body-pane" id="questionTextBox">Loading question...</div>
+                    
+                    <div class="options-pane-title">Answer ( Please select your correct option )</div>
+                    <div class="options-list-wrapper" id="optionsRadioGroup"></div>
+                </div>
+                
+                <div class="right-photo-panel">
+                    <div class="photo-box-frame">Your<br>Image<br>here</div>
+                    <div style="font-size:11px; font-weight:bold; color:#0055A5; text-align:center; line-height:1.4;">
+                        Candidate ID:<br><span style="color:#FF0000" id="displayCandidateId">NUST026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-grid-wrapper" id="navButtonMatrixGrid"></div>
+
+        <div class="bottom-action-row">
+            <div class="timer-dashboard">
+                <div class="timer-left-banner">Remaining<br>Time</div>
+                <div class="timer-countdown-clock" id="timerClockMinutes">03:00:00</div>
+            </div>
+
+            <div>
+                <span class="finish-trigger-link" onclick="triggerSubmitConfirmation()">Click here to <b>FINISH</b> Your Test</span>
+            </div>
+
+            <div class="button-bar-right">
+                <button class="retro-control-btn btn-system" onclick="saveAnswerState()">💾 Save</button>
+                <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(1)">Next ▶</button>
+                <button class="retro-control-btn btn-navigational" onclick="shiftActiveIndex(-1)">◀ Prev</button>
+                <button class="retro-control-btn btn-review" onclick="flagQuestionToggle()">📋 Review</button>
+                <button class="retro-control-btn btn-subject" onclick="switchSubjectCluster('math')">Math (100)</button>
+                <button class="retro-control-btn btn-subject" onclick="switchSubjectCluster('physics')">Phys (60)</button>
+                <button class="retro-control-btn btn-subject" onclick="switchSubjectCluster('english')">Eng (40)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-screen" id="reportCardModalOverlay">
+        <div class="modal-body">
+            <h2 style="color:#0055A5; font-size:20px;">NUST Examination Result Summary</h2>
+            <p style="margin-top:8px; font-size:13px; color:#555;">Evaluation finalized successfully. Scoring metric: +1 for correct, 0 for incorrect.</p>
+            <div class="score-output" id="totalScoreTarget">0 / 200</div>
+            <div id="subjectScoreBreakdownBox" style="text-align:left; background:#F8F9F9; padding:12px; font-size:13px; line-height:1.6; border:1px solid #BDC3C7; margin-bottom:15px;"></div>
+            <button class="login-btn" style="margin:0 auto; display:block; width:150px;" onclick="window.location.reload()">Restart Portal</button>
+        </div>
+    </div>
+
+    <script>
+        // Stream Specific Configuration: 100 Math, 60 Physics, 40 English
+        const TARGET_BLUEPRINT = { math: 100, physics: 60, english: 40 };
+        let activeTestSessionPool = [];
+        let globalPointerIndex = 0;
+        
+        // Exact 3 Hours countdown defined in total trackable execution seconds
+        let totalSecondsRemaining = 180 * 60; 
+        let trackingIntervalEngine = null;
+
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('candidatePassInput');
+            const toggleBtn = document.getElementById('togglePasswordBtn');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                toggleBtn.innerText = "Hide";
+            } else {
+                passInput.type = "password";
+                toggleBtn.innerText = "Show";
+            }
+        }
+
+        function authenticateUserLogin() {
+            const rawId = document.getElementById('candidateIdInput').value.trim();
+            const rawPass = document.getElementById('candidatePassInput').value.trim();
+            
+            // Master security authorization password definition
+            const MASTER_PASSWORD = "NUST2026"; 
+            
+            if(!rawId || !rawPass) { 
+                alert("Access Error: Both Candidate Roll Number and Access Password are required to log in."); 
+                return; 
+            }
+            
+            if(rawPass !== MASTER_PASSWORD) {
+                alert("Access Denied: Invalid Access Password. You are not authorized to access this exam session.");
+                return;
+            }
+            
+            document.getElementById('displayCandidateId').innerText = rawId;
+            document.getElementById('loginScreenView').style.display = 'none';
+            document.getElementById('examPortalView').style.display = 'block';
+            
+            launchTestEngine();
+        }
+
+        function pullRandomPool(source, limit) {
+            let copy = [...source].sort(() => 0.5 - Math.random());
+            while(copy.length < limit) { copy = copy.concat(copy); }
+            return copy.slice(0, limit).map(item => ({
+                ...item,
+                chosenIndexValue: null,
+                isFlagged: false,
+                isSavedPermanently: false
+            }));
+        }
+
+        function launchTestEngine() {
+            activeTestSessionPool = [];
+            
+            if (typeof QUESTION_BANK === 'undefined') {
+                alert("Data Error: The questions database file (questions.js) is missing or corrupted. Please check your file configurations.");
+                return;
+            }
+            
+            Object.keys(TARGET_BLUEPRINT).forEach(sec => {
+                if (QUESTION_BANK[sec]) {
+                    const localizedSubSet = pullRandomPool(QUESTION_BANK[sec], TARGET_BLUEPRINT[sec]);
+                    localizedSubSet.forEach((item, index) => {
+                        item.innerIndexValue = index + 1;
+                        item.sectionKeyName = sec;
+                    });
+                    activeTestSessionPool = activeTestSessionPool.concat(localizedSubSet);
+                }
+            });
+            
+            updateTimerDisplayElement();
+            executeCountdownTimer();
+            
+            refreshWorkspaceUI();
+            generateNavigationMatrix();
+        }
+
+        function executeCountdownTimer() {
+            if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
+            
+            trackingIntervalEngine = setInterval(() => {
+                if (totalSecondsRemaining <= 0) {
+                    clearInterval(trackingIntervalEngine);
+                    compileExamResults();
+                } else {
+                    totalSecondsRemaining--;
+                    updateTimerDisplayElement();
+                }
+            }, 1000); 
+        }
+
+        function updateTimerDisplayElement() {
+            let hours = Math.floor(totalSecondsRemaining / 3600);
+            let minutes = Math.floor((totalSecondsRemaining % 3600) / 60);
+            let seconds = totalSecondsRemaining % 60;
+
+            let formattedTimeStr = 
+                String(hours).padStart(2, '0') + ":" + 
+                String(minutes).padStart(2, '0') + ":" + 
+                String(seconds).padStart(2, '0');
+
+            document.getElementById('timerClockMinutes').innerText = formattedTimeStr;
+        }
+
+        function refreshWorkspaceUI() {
+            if(activeTestSessionPool.length === 0) return;
+            const currentQuestionObj = activeTestSessionPool[globalPointerIndex];
+            
+            let subjectCleanText = currentQuestionObj.sectionKeyName.toUpperCase();
+            if(subjectCleanText === "MATH") subjectCleanText = "MATHEMATICS";
+            
+            document.getElementById('currentSubjectHeader').innerText = subjectCleanText;
+            document.getElementById('questionNumTracker').innerText = `Question No : ${currentQuestionObj.innerIndexValue} of ${TARGET_BLUEPRINT[currentQuestionObj.sectionKeyName]}`;
+            document.getElementById('questionTextBox').innerText = currentQuestionObj.q;
+            
+            const radioContainer = document.getElementById('optionsRadioGroup');
+            radioContainer.innerHTML = '';
+            
+            currentQuestionObj.a.forEach((opt, idx) => {
+                const optRow = document.createElement('div');
+                optRow.className = `option-row-item ${currentQuestionObj.chosenIndexValue === idx ? 'selected' : ''}`;
+                optRow.onclick = () => {
+                    currentQuestionObj.chosenIndexValue = idx;
+                    refreshWorkspaceUI();
+                };
+                
+                optRow.innerHTML = `
+                    <input type="radio" class="option-radio-input" name="nust_radio" ${currentQuestionObj.chosenIndexValue === idx ? 'checked' : ''}>
+                    <span>${opt}</span>
+                `;
+                radioContainer.appendChild(optRow);
+            });
+
+            document.querySelectorAll('.nav-square-btn').forEach((btn, index) => {
+                btn.classList.toggle('active-focus', index === globalPointerIndex);
+            });
+        }
+
+        function generateNavigationMatrix() {
+            const gridContainer = document.getElementById('navButtonMatrixGrid');
+            gridContainer.innerHTML = '';
+            if(activeTestSessionPool.length === 0) return;
+            const activeSectionFilter = activeTestSessionPool[globalPointerIndex].sectionKeyName;
+
+            activeTestSessionPool.forEach((item, idx) => {
+                if(item.sectionKeyName !== activeSectionFilter) return;
+                
+                const square = document.createElement('div');
+                square.className = 'nav-square-btn';
+                square.innerText = item.innerIndexValue;
+                
+                if(item.isSavedPermanently) square.classList.add('filled');
+                if(item.isFlagged) square.classList.add('flagged-review');
+                
+                const contextualIndex = idx;
+                if(contextualIndex === globalPointerIndex) square.classList.add('active-focus');
+                
+                square.onclick = () => {
+                    globalPointerIndex = contextualIndex;
+                    refreshWorkspaceUI();
+                    generateNavigationMatrix();
+                };
+                gridContainer.appendChild(square);
+            });
+        }
+
+        function saveAnswerState() {
+            const currentItem = activeTestSessionPool[globalPointerIndex];
+            if(currentItem.chosenIndexValue !== null) {
+                currentItem.isSavedPermanently = true;
+            }
+            generateNavigationMatrix();
+            shiftActiveIndex(1); 
+        }
+
+        function flagQuestionToggle() {
+            activeTestSessionPool[globalPointerIndex].isFlagged = !activeTestSessionPool[globalPointerIndex].isFlagged;
+            generateNavigationMatrix();
+        }
+
+        function shiftActiveIndex(step) {
+            let calculatedTargetIdx = globalPointerIndex + step;
+            if(calculatedTargetIdx >= 0 && calculatedTargetIdx < activeTestSessionPool.length) {
+                const originalSectionName = activeTestSessionPool[globalPointerIndex].sectionKeyName;
+                globalPointerIndex = calculatedTargetIdx;
+                if(activeTestSessionPool[globalPointerIndex].sectionKeyName !== originalSectionName) {
+                    generateNavigationMatrix();
+                }
+                refreshWorkspaceUI();
+            }
+        }
+
+        function switchSubjectCluster(sectionKey) {
+            globalPointerIndex = activeTestSessionPool.findIndex(item => item.sectionKeyName === sectionKey);
+            refreshWorkspaceUI();
+            generateNavigationMatrix();
+        }
+
+        function triggerSubmitConfirmation() {
+            if(confirm("Do you want to finalise and finish your assessment examination submission?")) {
+                compileExamResults();
+            }
+        }
+
+        function compileExamResults() {
+            if (trackingIntervalEngine) { clearInterval(trackingIntervalEngine); }
+            let finalAccumulatedScore = 0;
+            let structuredStats = { math: 0, physics: 0, english: 0 };
+
+            activeTestSessionPool.forEach(item => {
+                if(item.chosenIndexValue !== null && item.chosenIndexValue === item.c) {
+                    finalAccumulatedScore++;
+                    structuredStats[item.sectionKeyName]++;
+                }
+            });
+
+            document.getElementById('totalScoreTarget').innerText = `${finalAccumulatedScore} / 200`;
+            document.getElementById('subjectScoreBreakdownBox').innerHTML = `
+                <strong>Verified Subject Breakdown:</strong><br>
+                • Mathematics Score: ${structuredStats.math} / 100<br>
+                • Physics Score: ${structuredStats.physics} / 60<br>
+                • English Score: ${structuredStats.english} / 40
+            `;
+            document.getElementById('reportCardModalOverlay').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
